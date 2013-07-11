@@ -11,7 +11,7 @@
 
 		function Shape(ctx) {
 
-			var x = 0, y = 0, w = 30, h = 30, move = 10;
+			var x = 0, y = 0, w = 30, h = 30, move = 30;
 
 			this.draw = function() {
 				ctx.fillRect(x, y, w, h);

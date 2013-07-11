@@ -6,8 +6,9 @@ Tetris
 ------
 
 ### Todo
-- create shapes: square, line, t, s, and z
+- if block goes off screen then make it show up on the other side
 - collision detection
+- create shapes: square, line, t, s, and z
 
 ### Completed
 - basic code struture
