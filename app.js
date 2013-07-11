@@ -13,15 +13,9 @@ function Tetris(canvasEl) {
 
 		var x = 15, y = 15, w = 30, h = 30, move = 30;
 
-		var leftOut = w * -1;
-		var rightOut = width;
-		var topOut = h * -1;
-		var bottomOut = height;
-
-		var farLeft = 0;
-		var farRight = width - w;
-		var farTop = 0;
-		var farBottom = height - h;
+		// Set the boundaries
+		var leftOut = w * -1, rightOut = width, topOut = h * -1, bottomOut = height;
+		var farLeft = 0, farRight = width - w, farTop = 0, farBottom = height - h;
 
 		var color = "#000";
 
@@ -111,11 +105,8 @@ function Tetris(canvasEl) {
 		for(i=1; i<len; i++) {
 			var s = shapes[i].position();
 
-			var srtX = s.x;
-			var endX = s.x + s.w;
-
-			var srtY = s.y;
-			var endY = s.y + s.h;
+			var srtX = s.x, endX = s.x + s.w;
+			var srtY = s.y, endY = s.y + s.h;
 
 			var insideX = between(a.x, srtX, endX);
 			var insideY = between(a.y, srtY, endY);
