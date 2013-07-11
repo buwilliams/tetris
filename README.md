@@ -15,3 +15,5 @@ Tetris
 - shape object
 - keyboard events
 - if block goes off screen then make it show up on the other side
+- support for chaning block color
+- added random starting position

@@ -23,7 +23,10 @@ function Tetris(canvasEl) {
 		var farTop = 0;
 		var farBottom = height - h;
 
+		var color = "#000";
+
 		this.draw = function() {
+			ctx.fillStyle = color;
 			ctx.fillRect(x, y, w, h);
 			return this;
 		}
@@ -47,6 +50,7 @@ function Tetris(canvasEl) {
 			} else {
 				y = pre;
 			}
+			return this;
 		}
 
 		this.moveDown = function() {
@@ -56,6 +60,7 @@ function Tetris(canvasEl) {
 			} else {
 				y = pre;
 			}
+			return this;
 		}
 
 		this.moveLeft = function() {
@@ -65,6 +70,7 @@ function Tetris(canvasEl) {
 			} else {
 				x = pre;
 			}
+			return this;
 		}
 
 		this.moveRight = function() {
@@ -74,6 +80,16 @@ function Tetris(canvasEl) {
 			} else {
 				x = pre;
 			}
+			return this;
+		}
+
+		this.color = function(newColor) {
+			color = newColor;
+			return this;
+		}
+
+		this.collide = function(aryShapes) {
+
 		}
 
 	}
@@ -123,6 +139,14 @@ function Tetris(canvasEl) {
 		}
 	}
 
+	function getRandomArbitary (min, max) {
+		return Math.random() * (max - min) + min;
+	}
+
+	function getRandomInt (min, max) {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
 	this.initialize = function() {
 
 		console.log(this);
@@ -135,8 +159,10 @@ function Tetris(canvasEl) {
 		var shape = new Shape(ctx);
 		shapes.push(shape);
 
-		//shape = new Shape(ctx).moveTo(20, 20);
-		//shapes.push(shape);
+		var ranX = getRandomInt(0, width);
+		var ranY = getRandomInt(0, height);
+		shape = new Shape(ctx).moveTo(ranX, ranY).color("blue");
+		shapes.push(shape);
 
 		loop();
 
