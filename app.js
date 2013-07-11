@@ -5,9 +5,82 @@ function Tetris(canvasEl) {
 	var shapes = [];
 	var width = canvasEl.width;
 	var height = canvasEl.height;
+  var engine;
 
 	// keys
 	var UP = 38, DOWN = 40, LEFT = 37, RIGHT = 39;
+
+  function Engine() {
+
+    var wait = convertFPStoMili(fps);
+    var moveCounter = new WaitCounter(250);
+
+    this.run = function() {
+      setInterval(function() {
+        events();
+        logic();
+        render();
+      }, wait);
+    }
+
+    function events() {
+
+    }
+
+    function logic() {
+
+      moveCounter.inc(wait);
+
+      if(moveCounter.ready()) {
+        eachShape(function(s, i) {
+          if(i !== 0) {
+            var ran = getRandomInt(1, 5);
+            if(ran == 1) {
+              s.moveLeft();
+            } else if(ran == 2) {
+              s.moveRight();
+            }
+            s.moveDown();
+          }
+        });
+        moveCounter.reset();
+      }
+    }
+
+    function render() {
+      clear();
+      eachShape(function(s) {
+        s.draw();
+      });
+    }
+
+    function clear() {
+      ctx.clearRect(0, 0, width, height);
+    }
+
+  }
+
+  function WaitCounter(waitTime) {
+    var expired = false;
+    var counter = 0;
+
+    this.reset = function() {
+      counter = 0;
+    }
+
+    this.inc = function(mili) {
+      counter += mili;
+    }
+
+    this.ready = function() {
+      if(counter >= waitTime) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+  }
 
 	function Shape(ctx) {
 
@@ -122,33 +195,16 @@ function Tetris(canvasEl) {
 		return false;
 	}
 
-	function loop() {
+  function eachShape(fn) {
+    each(shapes, fn);
+  }
 
-		var wait = convertFPStoMili(fps);
-
-		// Game loop
-		setInterval(function() {
-
-			var i, len = shapes.length;
-
-			// Game Loop Steps:
-			//   EVENTS
-			//   LOGIC
-			//   RENDERING
-
-			// 1stly, we need to clear the canvas
-			ctx.clearRect(0, 0, 500, 500);
-
-			// 2ndly, we need to draw all the shapes
-			for(i=0; i<len; i++) {
-				var s = shapes[i];
-				//s.moveBy(5, 5);
-				s.draw();
-			}
-
-		}, wait);
-
-	}
+  function each(ary, fn) {
+    var i, len = ary.length;
+    for(i=0; i<len; i++) {
+      fn(ary[i], i);
+    }
+  }
 
 	function convertFPStoMili(iFPS) {
 		return Math.floor(1000/iFPS);
@@ -185,7 +241,7 @@ function Tetris(canvasEl) {
 		return Math.random() * (max - min) + min;
 	}
 
-	function getRandomInt (min, max) {
+	function getRandomInt(min, max) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 
@@ -204,7 +260,18 @@ function Tetris(canvasEl) {
 		shape = new Shape(ctx).moveTo(ranX, ranY).color("blue");
 		shapes.push(shape);
 
-		loop();
+		var ranX = getRandomInt(0, width);
+		var ranY = getRandomInt(0, height);
+		shape = new Shape(ctx).moveTo(ranX, ranY).color("red");
+		shapes.push(shape);
+
+		var ranX = getRandomInt(0, width);
+		var ranY = getRandomInt(0, height);
+		shape = new Shape(ctx).moveTo(ranX, ranY).color("green");
+		shapes.push(shape);
+
+    engine = new Engine();
+    engine.run();
 
 	}
 
