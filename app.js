@@ -1,4 +1,4 @@
-(function(win, _, canvasEl) {
+(function(win, canvasEl) {
 
 	var Tetris = function(canvasEl) {
 
@@ -117,4 +117,4 @@
 	var tetris = new Tetris(canvasEl);
 	tetris.initialize();
 
-}(window, _, document.getElementById('box')));
+}(window, document.getElementById('box')));
