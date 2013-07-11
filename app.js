@@ -149,8 +149,6 @@ function Tetris(canvasEl) {
 
 	this.initialize = function() {
 
-		console.log(this);
-
 		document.onkeydown = function(e) { 
 			if(shapes.length == 0) { return; }
 			keypress(e);
