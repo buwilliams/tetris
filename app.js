@@ -3,13 +3,25 @@ function Tetris(canvasEl) {
 	var ctx = canvasEl.getContext('2d');
 	var fps = 40;
 	var shapes = [];
+	var width = canvasEl.width;
+	var height = canvasEl.height;
 
 	// keys
 	var UP = 38, DOWN = 40, LEFT = 37, RIGHT = 39;
 
 	function Shape(ctx) {
 
-		var x = 0, y = 0, w = 30, h = 30, move = 30;
+		var x = 15, y = 15, w = 30, h = 30, move = 30;
+
+		var leftOut = w * -1;
+		var rightOut = width;
+		var topOut = h * -1;
+		var bottomOut = height;
+
+		var farLeft = 0;
+		var farRight = width - w;
+		var farTop = 0;
+		var farBottom = height - h;
 
 		this.draw = function() {
 			ctx.fillRect(x, y, w, h);
@@ -29,19 +41,39 @@ function Tetris(canvasEl) {
 		}
 
 		this.moveUp = function() {
-			y -= move;
+			var pre = y - move;
+			if(pre <= topOut) {
+				y = farBottom;
+			} else {
+				y = pre;
+			}
 		}
 
 		this.moveDown = function() {
-			y += move;
+			var pre = y + move;
+			if(pre >= bottomOut) {
+				y = farTop;
+			} else {
+				y = pre;
+			}
 		}
 
 		this.moveLeft = function() {
-			x -= move;
+			var pre = x - move;
+			if(pre <= leftOut) {
+				x = farRight;
+			} else {
+				x = pre;
+			}
 		}
 
 		this.moveRight = function() {
-			x += move;
+			var pre = x + move;
+			if(pre >= rightOut) {
+				x = farLeft;
+			} else {
+				x = pre;
+			}
 		}
 
 	}

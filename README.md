@@ -6,7 +6,6 @@ Tetris
 ------
 
 ### Todo
-- if block goes off screen then make it show up on the other side
 - collision detection
 - create shapes: square, line, t, s, and z
 
@@ -15,3 +14,4 @@ Tetris
 - game loop
 - shape object
 - keyboard events
+- if block goes off screen then make it show up on the other side
