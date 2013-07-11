@@ -1,0 +1,8 @@
+div#app {
+	width: 502px;
+	margin: 20px auto;
+}
+
+canvas#box {
+	border: solid 1px black;
+}
