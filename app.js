@@ -88,10 +88,47 @@ function Tetris(canvasEl) {
 			return this;
 		}
 
-		this.collide = function(aryShapes) {
+		this.position = function() {
+			return { x: x, y: y, w: w, h: h }
+		}
+
+	}
+
+	function between(num, start, end) {
+		if(num >= start && num <= end) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function checkCollide() {
+
+		var i, len = shapes.length;
+
+		var a = shapes[0].position();
+
+		for(i=1; i<len; i++) {
+			var s = shapes[i].position();
+
+			var srtX = s.x;
+			var endX = s.x + s.w;
+
+			var srtY = s.y;
+			var endY = s.y + s.h;
+
+			var insideX = between(a.x, srtX, endX);
+			var insideY = between(a.y, srtY, endY);
+
+			// console.log(srtX, endX, srtY, endY, insideX, insideY, this);
+
+			if(insideX && insideY) {
+				return true;
+			}
 
 		}
 
+		return false;
 	}
 
 	function loop() {
@@ -136,7 +173,16 @@ function Tetris(canvasEl) {
 			s.moveLeft();
 		} else if(k === RIGHT) {
 			s.moveRight();
+		} else {
+			return;
 		}
+
+		var c = checkCollide();
+		if(c) {
+			console.log('Collision detected!');
+			alert('You ran into the box!');
+		}
+
 	}
 
 	function getRandomArbitary (min, max) {
