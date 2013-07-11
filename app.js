@@ -28,9 +28,19 @@ function Tetris(canvasEl) {
     }
 
     function logic() {
+      moveShapes();
+      collision();
+    }
 
+    function collision() {
+      var result = checkCollide();
+      if(result) {
+        alert('Gotcha!');
+      }
+    }
+
+    function moveShapes() {
       moveCounter.inc(wait);
-
       if(moveCounter.ready()) {
         eachShape(function(s, i) {
           if(i !== 0) {
@@ -227,12 +237,6 @@ function Tetris(canvasEl) {
 			s.moveRight();
 		} else {
 			return;
-		}
-
-		var c = checkCollide();
-		if(c) {
-			console.log('Collision detected!');
-			alert('You ran into the box!');
 		}
 
 	}
