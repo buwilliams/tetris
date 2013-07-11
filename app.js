@@ -7,7 +7,7 @@
 		var shapes = [];
 
 		// keys
-    var UP = 38, DOWN = 40, LEFT = 37, RIGHT = 39;
+		var UP = 38, DOWN = 40, LEFT = 37, RIGHT = 39;
 
 		function Shape(ctx) {
 
@@ -77,8 +77,8 @@
 
 		function keypress(e) {
 
-      var evt = (e) ? e : window.event;
-      var k = (evt.charCode) ?  evt.charCode : evt.keyCode;
+			var evt = (e) ? e : window.event;
+			var k = (evt.charCode) ?  evt.charCode : evt.keyCode;
 
 			var s = shapes[0];
 
