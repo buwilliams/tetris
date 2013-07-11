@@ -140,6 +140,11 @@ function Tetris(canvasEl) {
 
 			var i, len = shapes.length;
 
+			// Game Loop Steps:
+			//   EVENTS
+			//   LOGIC
+			//   RENDERING
+
 			// 1stly, we need to clear the canvas
 			ctx.clearRect(0, 0, 500, 500);
 

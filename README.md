@@ -6,7 +6,8 @@ Tetris
 ------
 
 ### Todo
-- collision detection
+- collision detection for edges
+- add logic and events layer
 - create shapes: square, line, t, s, and z
 
 ### Completed
@@ -17,3 +18,4 @@ Tetris
 - if block goes off screen then make it show up on the other side
 - support for chaning block color
 - added random starting position
+- collision detection for x, y on active square
