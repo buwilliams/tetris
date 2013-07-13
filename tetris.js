@@ -2,23 +2,26 @@ function Tetris(canvasEl, fps, block_size) {
 
 	var ctx = canvasEl.getContext('2d'),
 			shapes = [],
+			events = [],
 			active_shape,
 			engine,
 			board_width = Math.floor(canvasEl.width / block_size),
-			board_height = Math.floor(canvasEl.height / block_size);
-
-	// keys
-	var UP = 38, DOWN = 40, LEFT = 37, RIGHT = 39;
+			board_height = Math.floor(canvasEl.height / block_size),
+			piece_speed = 1000,
+			UP = 38,
+			DOWN = 40,
+			LEFT = 37,
+			RIGHT = 39;
 
   function Engine() {
 
     var wait = convertFPStoMili(fps);
-    var moveCounter = new WaitCounter(1000);
+    var moveCounter = new WaitCounter(piece_speed);
 		var gameTimer;
 
     this.run = function() {
       gameTimer = setInterval(function() {
-        events();
+        processEvents();
         logic();
         render();
       }, wait);
@@ -28,7 +31,19 @@ function Tetris(canvasEl, fps, block_size) {
 			clearInterval(gameTimer);
 		}
 
-    function events() {
+    function processEvents() {
+			while(events.length !== 0) {
+				var e = events.shift();
+				if(e === "rotate") {
+					active_shape.rotate();
+				} else if(e === "left") {
+					active_shape.moveLeft();
+				} else if(e === "right") {
+					active_shape.moveRight();
+				} else if(e === "down") {
+					active_shape.moveDown();
+				}
+			}
     }
 
     function logic() {
@@ -39,6 +54,12 @@ function Tetris(canvasEl, fps, block_size) {
       moveCounter.inc(wait);
       if(moveCounter.ready()) {
 				active_shape.moveDown();
+				if(active_shape.bottom() >= board_height) {
+					active_shape.moveUp();
+					shapes.push(active_shape);
+					active_shape = new Shape(ctx);
+					active_shape.initialize();
+				}
         moveCounter.reset();
       }
     }
@@ -112,6 +133,10 @@ function Tetris(canvasEl, fps, block_size) {
 			var random_int = getRandomInt(1, 7) - 1;
 			current_shape = clone(shapes_bitmap[random_int]);
 			current_color = colors[random_int];
+			updateShape();
+		}
+
+		function updateShape() {
 			current_size = getSize();
 			y = 0 - current_size.height;
 			x = Math.floor((board_width / 2) - (current_size.width / 2));
@@ -162,6 +187,11 @@ function Tetris(canvasEl, fps, block_size) {
 			return this;
 		}
 
+		this.moveUp = function() {
+			--y;
+			return this;
+		}
+
 		this.moveDown = function() {
 			++y;
 			return this;
@@ -183,6 +213,7 @@ function Tetris(canvasEl, fps, block_size) {
 				new_shape[n][i] = col;
 			});
 			current_shape = new_shape;
+			updateShape();
 			return this;
 		}
 
@@ -192,6 +223,30 @@ function Tetris(canvasEl, fps, block_size) {
 
 		this.x_abs = function(row, col) {
 			return x + col;
+		}
+
+		this.left = function() {
+			return this.right() - current_size.width;
+		}
+
+		this.right = function() {
+			var cur_x = 0;
+			this.loop_blocks(function(row, i, col, n) {
+				cur_x = (n > cur_x) ? n : cur_x;
+			});
+			return x + cur_x;
+		}
+
+		this.top = function() {
+			return this.bottom() - current_size.height;
+		}
+
+		this.bottom = function() {
+			var cur_y = 0;
+			this.loop_blocks(function(row, i, col, n) {
+				cur_y = (i > cur_y) ? i : cur_y;
+			});
+			return y + cur_y;
 		}
 
 		this.y_abs = function(row, col) {
@@ -217,17 +272,16 @@ function Tetris(canvasEl, fps, block_size) {
 			});
 			return result;
 		}
+	}
 
-		this.collide = function(shape) {
-			var result = false;
-			this.loop_blocks(function(row, i, col, n) {
-				var cur_x = this.x_abs();
-				var cur_y = this.y_abs();
-				result = (shape.find_abs(cur_x, cur_y)) ? true : result;
-			});
-			return result;
-		}
-
+	function collide() {
+		var result = false;
+		this.loop_blocks(function(row, i, col, n) {
+			var cur_x = this.x_abs();
+			var cur_y = this.y_abs();
+			result = (shape.find_abs(cur_x, cur_y)) ? true : result;
+		});
+		return result;
 	}
 
 	function between(num, start, end) {
@@ -259,15 +313,13 @@ function Tetris(canvasEl, fps, block_size) {
 		var k = (evt.charCode) ?  evt.charCode : evt.keyCode;
 
 		if(k === UP) {
-			active_shape.rotate();
+			events.push("rotate");
 		} else if(k === DOWN) {
-			active_shape.moveDown();
+			events.push("down");
 		} else if(k === LEFT) {
-			active_shape.moveLeft();
+			events.push("left");
 		} else if(k === RIGHT) {
-			active_shape.moveRight();
-		} else {
-			return;
+			events.push("right");
 		}
 	}
 
