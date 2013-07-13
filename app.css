@@ -22,6 +22,7 @@ div.box {
 
 canvas#box {
 	border: solid 3px aqua;
+	background-color: #000;
 }
 
 div#left, div#center, div#right {

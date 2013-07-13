@@ -11,6 +11,9 @@ Tetris
 - line completion logic
 - add scoring and page callbacks
 - sounds: theme music, game over, row completion, level up
+- add keys: h,j,k,l for movements
+- add on screen controls for movements and new game
+- add screen controls indicating current level
 - add levels which increase speed
 
 ### Completed
