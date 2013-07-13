@@ -63,13 +63,10 @@ function Tetris(canvasEl, fps, block_size) {
       moveCounter.inc(wait);
       if(moveCounter.ready()) {
 				active_shape.moveDown();
-				if(collide()) {
-					active_shape.moveUp();
-				}
 				if(active_shape.bottom() >= board_height) {
 					active_shape.moveUp();
 					shapes.push(active_shape);
-					active_shape = new Shape(ctx, block_size);
+					active_shape = new Shape(ctx, block_size, board_width, board_height);
 					active_shape.initialize();
 				}
         moveCounter.reset();
@@ -79,7 +76,7 @@ function Tetris(canvasEl, fps, block_size) {
     function render() {
       clear();
 			background();
-      eachShape(function(s) {
+      each(shapes, function(s) {
         s.draw();
       });
 			active_shape.draw();
@@ -139,7 +136,7 @@ function Tetris(canvasEl, fps, block_size) {
 			keypress(e);
 		}
 
-		active_shape = new Shape(ctx, block_size);
+		active_shape = new Shape(ctx, block_size, board_width, board_height);
 		active_shape.initialize();
 
     engine = new Engine();

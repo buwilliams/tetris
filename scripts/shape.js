@@ -1,4 +1,4 @@
-function Shape(ctx, block_size) {
+function Shape(ctx, block_size, board_width, board_height) {
 
 	var x = 0,
 			y = 0,

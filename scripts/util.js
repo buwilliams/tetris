@@ -13,8 +13,8 @@ function each(ary, fn) {
 	}
 }
 
-function convertFPStoMili(iFPS) {
-	return Math.floor(1000/iFPS);
+function convertFPStoMili(fps) {
+	return Math.floor(1000/fps);
 }
 
 function between(num, start, end) {
