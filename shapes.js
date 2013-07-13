@@ -1,12 +1,10 @@
 function Shapes(canvasEl) {
 
 	var ctx = canvasEl.getContext('2d'),
-			block_size = 20,
 			width = canvasEl.width,
-			height = canvasEl.height;
+			height = canvasEl.height,
+			block_size = 30;
 
-	ctx.clearRect(0, 0, width, height);
-	//ctx.fillStyle = color;
 
 	function drawBlock(x, y) {
 		ctx.fillRect(x*block_size, y*block_size, block_size, block_size);
@@ -20,28 +18,39 @@ function Shapes(canvasEl) {
 		}
 	}
 
-	// http://tetris.wikia.com/wiki/Tetromino
-	var l_shape = [[1, 0, 0, 0], [1, 0, 0, 0], [1, 1, 0, 0], [0, 0, 0, 0]];
-	var s_shape = [[0, 1, 1, 0], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-	var o_shape = [[1, 1, 0, 0], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-	var t_shape = [[0, 1, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-	var i_shape = [[1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]];
+	var colors = ["aqua", "Gold", "Magenta", "LimeGreen", "red", "blue", "orange"];
 
-	function drawShape(offsetX, offsetY, shape) {
+	// http://tetris.wikia.com/wiki/Tetromino
+	var shapes = [
+		[[1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[1, 1, 0, 0], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[0, 1, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[0, 1, 1, 0], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[1, 0, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[0, 0, 1, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+	];
+
+	function drawShape(offsetX, offsetY, shape, index) {
+		ctx.clearRect(0, 0, width, height);
+		ctx.fillStyle = colors[index];
 		each(shape, function(row, i) {
 			each(row, function(col, n) {
+				//console.log(i, n, shape[i][n]);
 				if(col === 1) { 
-					drawBlock(offsetX+i, offsetY+n);
+					drawBlock(offsetX+n, offsetY+i);
 				}
 			});
 		});
 	}
 
-	drawShape(1, 1,  l_shape);
-	drawShape(1, 6,  s_shape);
-	drawShape(1, 11, o_shape);
-	drawShape(1, 17, t_shape);
-	drawShape(1, 23, i_shape);
+	function draw(offsetX, offsetY, index) {
+		drawShape(offsetX, offsetY, shapes[index], index);
+	}
+	
+	return {
+		draw: draw
+	}
 
 }
 

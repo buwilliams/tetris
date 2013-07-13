@@ -7,11 +7,24 @@
 <body>
 
 <div id="app">
-	<h2>Tetris</h2>
-	<canvas id="box" width="500" height="500"></canvas>
+	<div id="left">
+		<div class="box">
+			<h2>Tetris</h2>
+		</div>
+	</div>
+	<div id="center">
+		<canvas id="box" width="300" height="600"></canvas>
+	</div>
+	<div id="right">
+		<div class="box">
+			Lines: <span id="lines">0</span><br/>
+			Score: <span id="score">0</span>
+		</div>
+	</div>
 </div>
 
-<script src="shapes.js" type="text/javascript"></script>
+<script src="tetris.js" type="text/javascript"></script>
+<script src="app.js" type="text/javascript"></script>
 
 </body>
 </html>

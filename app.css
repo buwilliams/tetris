@@ -1,8 +1,43 @@
+body {
+	background-color: blue;
+	color: aqua;
+	font-family: "menlo"
+}
+
 div#app {
-	width: 502px;
-	margin: 20px auto;
+	width: 746px;
+	margin: 10px auto;
+}
+
+h2 {
+	margin: 0;
+}
+
+div.box {
+	margin-bottom: 20px;
+	background-color: #000;
+	border: solid 3px aqua;
+	padding: 5px;
 }
 
 canvas#box {
-	border: solid 1px black;
+	border: solid 3px aqua;
+}
+
+div#left, div#center, div#right {
+	float:left;
+}
+
+div#left {
+	width: 200px;
+	margin-right: 20px;
+}
+
+div#center {
+	width: 306px;
+	margin-right: 20px;
+}
+
+div#right {
+	width: 200px;
 }
