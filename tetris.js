@@ -38,7 +38,6 @@ function Tetris(canvasEl, fps, block_size) {
     function moveShapes() {
       moveCounter.inc(wait);
       if(moveCounter.ready()) {
-				console.log('here');
 				active_shape.moveDown();
         moveCounter.reset();
       }
@@ -97,6 +96,7 @@ function Tetris(canvasEl, fps, block_size) {
 		var colors = ["aqua", "Gold", "Magenta", "LimeGreen", "red", "blue", "orange"];
 
 		// Shape definitions, see: http://tetris.wikia.com/wiki/Tetromino
+		var empty_bitmap = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 		var shapes_bitmap = [
 			[[1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
 			[[1, 1, 0, 0], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
@@ -109,7 +109,7 @@ function Tetris(canvasEl, fps, block_size) {
 
 		this.initialize = function() {
 			// Grab a new shape
-			var random_int = getRandomInt(1, 7);
+			var random_int = getRandomInt(1, 7) - 1;
 			current_shape = clone(shapes_bitmap[random_int]);
 			current_color = colors[random_int];
 			current_size = getSize();
@@ -142,6 +142,14 @@ function Tetris(canvasEl, fps, block_size) {
 			ctx.fillStyle = current_color;
 			ctx.fillRect(x*block_size, y*block_size, block_size, block_size);
 		}
+		
+		function loop(fn) {
+			each(current_shape, function(row, i) {
+				each(row, function(col, n) {
+					fn(row, i, col, n);
+				});
+			});
+		}
 
 		this.draw = function() {
 			each(current_shape, function(row, i) {
@@ -170,7 +178,11 @@ function Tetris(canvasEl, fps, block_size) {
 		}
 
 		this.rotate = function() {
-			console.log('rotate');
+			var new_shape = clone(empty_bitmap);
+			loop(function(row, i, col, n) {
+				new_shape[n][i] = col;
+			});
+			current_shape = new_shape;
 			return this;
 		}
 
@@ -187,12 +199,10 @@ function Tetris(canvasEl, fps, block_size) {
 		}
 
 		this.loop_blocks = function(fn) {
-			each(current_shape, function(row, i) {
-				each(row, function(col, n) {
-					if(col === 1) {
-						fn(row, i, col, n);
-					}
-				});
+			loop(function(row, i, col, n) {
+				if(col === 1) {
+					fn(row, i, col, n);
+				}
 			});
 		}
 
