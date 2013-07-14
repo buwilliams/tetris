@@ -38,19 +38,10 @@ function Tetris(canvasEl, fps, block_size) {
 					active_shape.rotate();
 				} else if(e === "left") {
 					active_shape.moveLeft();
-					if(collide()) {
-						active_shape.moveRight();
-					}
 				} else if(e === "right") {
 					active_shape.moveRight();
-					if(collide()) {
-						active_shape.moveLeft();
-					}
 				} else if(e === "down") {
 					active_shape.moveDown();
-					if(collide()) {
-						active_shape.moveUp();
-					}
 				}
 			}
     }
@@ -63,12 +54,14 @@ function Tetris(canvasEl, fps, block_size) {
       moveCounter.inc(wait);
       if(moveCounter.ready()) {
 				active_shape.moveDown();
+				/*
 				if(active_shape.bottom() >= board_height) {
 					active_shape.moveUp();
 					shapes.push(active_shape);
 					active_shape = new Shape(ctx, block_size, board_width, board_height);
 					active_shape.initialize();
 				}
+				*/
         moveCounter.reset();
       }
     }
@@ -142,6 +135,10 @@ function Tetris(canvasEl, fps, block_size) {
     engine = new Engine();
     engine.run();
 
+		this.shapes = shapes;
+		this.active_shape = active_shape;
+
 	}
+
 
 }
