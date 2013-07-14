@@ -43,7 +43,7 @@ function Tetris(canvasEl, fps, block_size) {
 				} else if(e === "down") {
 					active_shape.moveDown();
 				}
-				if(active_shape.checkBoundary(0, 0, board_width-1, board_height-1)) {
+				if(hit() || active_shape.checkBoundary(0, 0, board_width-1, board_height-1)) {
 					active_shape.undo();
 				}
 			}
@@ -55,19 +55,24 @@ function Tetris(canvasEl, fps, block_size) {
 
     function moveShapes() {
       moveCounter.inc(wait);
-      if(moveCounter.ready()) {
-				//active_shape.moveDown();
-				/*
-				if(active_shape.bottom() >= board_height) {
-					active_shape.moveUp();
-					shapes.push(active_shape);
-					active_shape = new Shape(ctx, block_size);
-					active_shape.initialize();
-				}
-				*/
-        moveCounter.reset();
-      }
+      if(!moveCounter.ready()) { return; }
+			active_shape.moveDown();
+			if(active_shape.checkBoundary(0, 0, board_width-1, board_height-1) || hit()) {
+				active_shape.undo();
+				shapes.push(active_shape);
+				active_shape = new Shape(ctx, block_size);
+				active_shape.initialize();
+			}
+			moveCounter.reset();
     }
+
+		function hit() {
+			var hit_status = false;
+			each(shapes, function(shape, i) {
+				hit_status = (active_shape.compare(shape)) ? true : hit_status;
+			});
+			return hit_status;
+		}
 
     function render() {
       clear();
@@ -88,27 +93,6 @@ function Tetris(canvasEl, fps, block_size) {
     }
 
   }
-
-	function collide() {
-		var result = false;
-		each(shapes, function(item, i) {
-			result = (collideAB(active_shape, item)) ? true : result;
-			if(result) {
-				console.log('collision found', active_shape, item);
-			}
-		});
-		return result;
-	}
-
-	function collideAB(shapeA, shapeB) {
-		var result = false;
-		shapeA.loop_blocks(function(row, i, col, n) {
-			var cur_x = shapeA.x_abs(),
-					cur_y = shapeA.y_abs();
-			result = (shapeB.find_abs(cur_x, cur_y)) ? true : result;
-		});
-		return result;
-	}
 
 	function keypress(e) {
 
