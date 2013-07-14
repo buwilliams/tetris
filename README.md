@@ -6,9 +6,9 @@ Tetris
 ------
 
 ### Todo
-- add logic to prevent blocks from going off to the right or left
-- add logic to prevent movement on collision with another block
+- fix the rotate logic
 - line completion logic
+- ability to remove blocks on line completion
 - add scoring and page callbacks
 - sounds: theme music, game over, row completion, level up
 - add keys: h,j,k,l for movements
@@ -30,3 +30,6 @@ Tetris
 - added page layout and css styles
 - create shapes: square, line, t, s, and z
 - add logic and events layer
+- add logic to prevent blocks from going off to the right or left
+- add logic to prevent movement on collision with another block
+- added 3d effect for blocks
