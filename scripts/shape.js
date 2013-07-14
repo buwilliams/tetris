@@ -7,7 +7,18 @@ function Shape(ctx, block_size) {
 			current_color,
 			history = [];
 
-	var colors = ["aqua", "Gold", "Magenta", "LimeGreen", "red", "blue", "orange"];
+	// aqua        = #00FFCC
+	// gold        = #FFD700
+	// magenta     = #FF00FF
+	// limegreen   = #32CD32
+	// bloodorange = #CC1100
+	// slateblue   = #007FFF
+	// orange      = #FF6600
+	
+
+
+	var colors = ['#00FFCC', '#FFD700', '#FF00FF', '#32CD32', '#CC1100', '#007FFF', '#FF6600'];
+	//var colors = ["aqua", "Gold", "Magenta", "LimeGreen", "red", "blue", "orange"];
 
 	// Shape definitions, see: http://tetris.wikia.com/wiki/Tetromino
 	var empty_bitmap = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
@@ -37,8 +48,46 @@ function Shape(ctx, block_size) {
 	}
 
 	function drawBlock(x, y, color) {
+		var xPos = x*block_size, 
+		    yPos = y*block_size,
+				m = block_size;
+
 		ctx.fillStyle = current_color;
-		ctx.fillRect(x*block_size, y*block_size, block_size, block_size);
+		ctx.fillRect(xPos, yPos, m, m);
+
+		var c1 = hexLum(current_color, -0.1);
+		var c2 = hexLum(current_color, -0.3);
+		var c3 = hexLum(current_color, -0.3);
+		var c4 = hexLum(current_color, -0.2);
+		var lw = 3;
+
+		ctx.beginPath();
+		ctx.moveTo(xPos, yPos);
+		ctx.lineTo(xPos, yPos+m);
+		ctx.lineWidth = lw;
+		ctx.strokeStyle = c1;
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.moveTo(xPos, yPos+m);
+		ctx.lineTo(xPos+m, yPos+m);
+		ctx.lineWidth = lw;
+		ctx.strokeStyle = c2;
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.moveTo(xPos+m, yPos+m);
+		ctx.lineTo(xPos+m, yPos);
+		ctx.lineWidth = lw;
+		ctx.strokeStyle = c3;
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.moveTo(xPos+m, yPos);
+		ctx.lineTo(xPos, yPos);
+		ctx.lineWidth = lw;
+		ctx.strokeStyle = c4;
+		ctx.stroke();
 	}
 	
 	function loop(fn) {
