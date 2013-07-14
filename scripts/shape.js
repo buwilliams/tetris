@@ -1,10 +1,11 @@
-function Shape(ctx, block_size, board_width, board_height) {
+function Shape(ctx, block_size) {
 
 	var x = 0,
 			y = 0,
 			move = 1,
 			current_shape,
-			current_color;
+			current_color,
+			history = [];
 
 	var colors = ["aqua", "Gold", "Magenta", "LimeGreen", "red", "blue", "orange"];
 
@@ -49,6 +50,10 @@ function Shape(ctx, block_size, board_width, board_height) {
 	}
 
 	this.draw = function() {
+		// keep the history to a managable size
+		if(history.length > 10) {
+			history.shift();
+		}
 		each(current_shape, function(row, i) {
 			each(row, function(col, n) {
 				if(col === 1) { drawBlock(x+n, y+i); }
@@ -57,10 +62,10 @@ function Shape(ctx, block_size, board_width, board_height) {
 		return this;
 	}
 
-	this.moveUp = function() { --y; return this; }
-	this.moveDown = function() { ++y; return this; }
-	this.moveLeft = function() { --x; return this; }
-	this.moveRight = function() { ++x; return this; }
+	this.moveUp = function() { --y; history.push("moveUp"); return this; }
+	this.moveDown = function() { ++y; history.push("moveDown"); return this; }
+	this.moveLeft = function() { --x; history.push("moveLeft"); return this; }
+	this.moveRight = function() { ++x; history.push("moveRight"); return this; }
 
 	this.rotate = function() {
 		var new_shape = clone(empty_bitmap);
@@ -68,6 +73,7 @@ function Shape(ctx, block_size, board_width, board_height) {
 			new_shape[n][i] = col;
 		});
 		current_shape = new_shape;
+		history.push("rotate");
 		return this;
 	}
 
@@ -75,16 +81,16 @@ function Shape(ctx, block_size, board_width, board_height) {
 		var pos = [];
 		loop(function(row, i, col, n) {
 			if(col === 1) {
-				pos.push([i+x, n+y]);
+				pos.push([n+x, i+y]);
 			}
 		});
 		return pos;
 	}
 
 	this.compare = function(shape) {
-		var collision = false;
-		var cordsA = this.getAbsPos();
-		var cordsB = shape.getAbsPos();
+		var collision = false,
+				cordsA = this.getAbsPos(),
+				cordsB = shape.getAbsPos();
 		each(cordsA, function(a, i) {
 			each(cordsB, function(b, n) {
 				if(a[0] == b[0] && a[1] == b[1]) {
@@ -93,6 +99,35 @@ function Shape(ctx, block_size, board_width, board_height) {
 			});
 		});
 		return collision;
+	}
+
+	this.checkBoundary = function(minX, minY, maxX, maxY) {
+		var outOfBounds = false;
+		var pos = this.getAbsPos();
+		each(pos, function(cords, i) {
+			if(cords[0] < minX || cords[0] > maxX || cords[1] < minY || cords[1] > maxY) {
+				outOfBounds = true;
+			}
+		});
+		return outOfBounds;
+	}
+
+	this.removeX = function(xVal) {
+	}
+
+	this.undo = function() {
+		if(history.length === 0) { return; }
+		var action = history.pop();
+		if(action === "moveUp") {
+			this.moveDown();
+		} else if(action === "moveDown") {
+			this.moveUp();
+		} else if(action === "moveLeft") {
+			this.moveRight();
+		} else if(action === "moveRight") {
+			this.moveLeft();
+		}
+
 	}
 
 }
