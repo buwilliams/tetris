@@ -61,33 +61,54 @@ function Shape(ctx, block_size) {
 		var c4 = hexLum(current_color, -0.2);
 		var lw = 3;
 
-		ctx.beginPath();
-		ctx.moveTo(xPos, yPos);
-		ctx.lineTo(xPos, yPos+m);
-		ctx.lineWidth = lw;
-		ctx.strokeStyle = c1;
-		ctx.stroke();
+		//add3dBorder(xPos, yPos, block_size, 3, c1, c2, c3, c4);
+	}
 
-		ctx.beginPath();
-		ctx.moveTo(xPos, yPos+m);
-		ctx.lineTo(xPos+m, yPos+m);
-		ctx.lineWidth = lw;
-		ctx.strokeStyle = c2;
-		ctx.stroke();
+	function add3dBorder(x, y, rect_size, border_width, c1, c2, c3, c4) {
+		var i,
+		    side = 0,
+				color,
+				strX,
+				strY,
+				endX,
+				endY;
 
-		ctx.beginPath();
-		ctx.moveTo(xPos+m, yPos+m);
-		ctx.lineTo(xPos+m, yPos);
-		ctx.lineWidth = lw;
-		ctx.strokeStyle = c3;
-		ctx.stroke();
+		for(i=0; i<border_width; i++) {
 
-		ctx.beginPath();
-		ctx.moveTo(xPos+m, yPos);
-		ctx.lineTo(xPos, yPos);
-		ctx.lineWidth = lw;
-		ctx.strokeStyle = c4;
-		ctx.stroke();
+			if(side = 0) {
+				color = c1;
+				strX = x + i;
+				strY = y + i;
+				endX = x + i;
+				endY = y + rect_size - i;
+			} else if(side == 1) {
+				color = c2;
+				strX = x + i;
+				strY = y + i;
+				endX = x + rect_size - i;
+				endY = y + rect_size - i;
+			} else if(side == 2) {
+				color = c3;
+				strX = x + rect_size - i;
+				strY = y + i;
+				endX = x + rect_size - i;
+				endY = y + rect_size - i;
+			} else if(side == 3) {
+				color = c4;
+				strX = x + i;
+				strY = y + i;
+				endX = x + rect_size - i;
+				endY = y + rect_size - i;
+			}
+
+			ctx.beginPath();
+			ctx.moveTo(strX, strY);
+			ctx.lineTo(endX, endY);
+			ctx.strokeStyle = color;
+			ctx.lineWidth = 1;
+			ctx.stroke();
+			side = (side == 3) ? 0 : side++;
+		}
 	}
 	
 	function loop(fn) {
