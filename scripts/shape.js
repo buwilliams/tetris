@@ -55,18 +55,17 @@ function Shape(ctx, block_size) {
 		ctx.fillStyle = current_color;
 		ctx.fillRect(xPos, yPos, m, m);
 
-		var c1 = hexLum(current_color, -0.1);
-		var c2 = hexLum(current_color, -0.3);
-		var c3 = hexLum(current_color, -0.3);
-		var c4 = hexLum(current_color, -0.2);
-		var lw = 3;
+		var c1 = hexLum(current_color, 0.3);
+		var c2 = hexLum(current_color, -0.4);
+		var c3 = hexLum(current_color, -0.5);
+		var c4 = hexLum(current_color, 2.0);
 
-		//add3dBorder(xPos, yPos, block_size, 3, c1, c2, c3, c4);
+		add3dBorder(xPos, yPos, m, 5, c1, c2, c3, c4);
 	}
 
 	function add3dBorder(x, y, rect_size, border_width, c1, c2, c3, c4) {
 		var i,
-		    side = 0,
+		    side = 1,
 				color,
 				strX,
 				strY,
@@ -74,40 +73,40 @@ function Shape(ctx, block_size) {
 				endY;
 
 		for(i=0; i<border_width; i++) {
+			for(side=1; side<5; side++) {
+				if(side == 1) {
+					color = c1;
+					strX = x + i;
+					strY = y + i;
+					endX = x + i;
+					endY = y + rect_size - i;
+				} else if(side == 2) {
+					color = c2;
+					strX = x + i;
+					strY = y + rect_size - i;
+					endX = x + rect_size - i;
+					endY = y + rect_size - i;
+				} else if(side == 3) {
+					color = c3;
+					strX = x + rect_size - i;
+					strY = y + i;
+					endX = x + rect_size - i;
+					endY = y + rect_size - i;
+				} else if(side == 4) {
+					color = c4;
+					strX = x + i;
+					strY = y + i;
+					endX = x + rect_size - i;
+					endY = y + i;
+				}
 
-			if(side = 0) {
-				color = c1;
-				strX = x + i;
-				strY = y + i;
-				endX = x + i;
-				endY = y + rect_size - i;
-			} else if(side == 1) {
-				color = c2;
-				strX = x + i;
-				strY = y + i;
-				endX = x + rect_size - i;
-				endY = y + rect_size - i;
-			} else if(side == 2) {
-				color = c3;
-				strX = x + rect_size - i;
-				strY = y + i;
-				endX = x + rect_size - i;
-				endY = y + rect_size - i;
-			} else if(side == 3) {
-				color = c4;
-				strX = x + i;
-				strY = y + i;
-				endX = x + rect_size - i;
-				endY = y + rect_size - i;
+				ctx.beginPath();
+				ctx.moveTo(strX, strY);
+				ctx.lineTo(endX, endY);
+				ctx.strokeStyle = color;
+				ctx.lineWidth = 1;
+				ctx.stroke();
 			}
-
-			ctx.beginPath();
-			ctx.moveTo(strX, strY);
-			ctx.lineTo(endX, endY);
-			ctx.strokeStyle = color;
-			ctx.lineWidth = 1;
-			ctx.stroke();
-			side = (side == 3) ? 0 : side++;
 		}
 	}
 	

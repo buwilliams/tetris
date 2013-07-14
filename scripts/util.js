@@ -26,20 +26,34 @@ function between(num, start, end) {
 }
 
 function hexLum(hex, lum) {
-	// ColorLuminance
-	// validate hex string
-	hex = String(hex).replace(/[^0-9a-f]/gi, '');
-	if (hex.length < 6) {
-		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-	}
-	lum = lum || 0;
-	// convert to decimal and change luminosity
-	var rgb = "#", c, i;
-	for (i = 0; i < 3; i++) {
-		c = parseInt(hex.substr(i*2,2), 16);
-		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-		rgb += ("00"+c).substr(c.length);
-	}
-	return rgb;
-}
+	hex = hex.replace('#', '');
 
+	var hexR = hex.substring(0, 2);
+	var hexG = hex.substring(2, 4);
+	var hexB = hex.substring(4, 6);
+
+	var intR = parseInt(hexR, 16);
+	var intG = parseInt(hexG, 16);
+	var intB = parseInt(hexB, 16);
+
+	function makeLum(val) {
+		val = val + Math.floor(val*lum);
+		val = (val > 255) ? 255 : val;
+		val = (val < 0) ? 0 : val;
+		return val;
+	}
+
+	intR = makeLum(intR);
+	intG = makeLum(intG);
+	intB = makeLum(intB);
+
+	hexR = intR.toString(16);
+	hexG = intG.toString(16);
+	hexB = intB.toString(16);
+
+	hexR = (hexR.length == 1) ? hexR + hexR : hexR;
+	hexG = (hexG.length == 1) ? hexG + hexG : hexG;
+	hexB = (hexB.length == 1) ? hexB + hexB : hexB;
+
+	return '#'+hexR+hexG+hexB;
+}
