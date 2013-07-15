@@ -181,9 +181,6 @@ function Shape(ctx, block_size) {
 		return outOfBounds;
 	}
 
-	this.removeX = function(xVal) {
-	}
-
 	this.undo = function() {
 		if(history.length === 0) { return; }
 		var action = history.pop();
@@ -196,7 +193,41 @@ function Shape(ctx, block_size) {
 		} else if(action === "moveRight") {
 			this.moveLeft();
 		}
+	}
 
+	this.getRow = function(xVal) {
+		if(!this.hasRow(xVal)) {
+			return null;
+		} else {
+			var rowindex = 0;
+			loop(function(row, i, col, n) {
+				var calc_x = i + x;
+				if(calc_x === xVal) {
+					rowindex = i;
+				}
+			});
+			//console.log('returning row', rowindex, x, xVal);
+			return current_shape[rowindex];
+		}
+	}
+
+	this.hasRow = function(xVal) {
+		var rowStr = x;
+		var rowEnd = current_shape.length;
+		return between(xVal, rowStr, rowEnd);
+	}
+
+	this.removeRow = function(xVal) {
+		if(!this.hasRow(xVal)) {
+			return null;
+		} else {
+			var rowindex = xVal - x;
+			current_shape.splice(rowindex, 1);
+		}
+	}
+
+	this.isEmpty = function() {
+		return (current_shape.length === 0) ? true : false;
 	}
 
 }

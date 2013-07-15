@@ -51,6 +51,8 @@ function Tetris(canvasEl, fps, block_size) {
 
     function logic() {
       moveShapes();
+			checkRows();
+			cleanup();
     }
 
     function moveShapes() {
@@ -72,6 +74,60 @@ function Tetris(canvasEl, fps, block_size) {
 				hit_status = (active_shape.compare(shape)) ? true : hit_status;
 			});
 			return hit_status;
+		}
+
+		function checkRows() {
+			var row_shapes = [],
+					count_cols = 0,
+					cur_row;
+
+			// loop through the board rows
+			for(var i=0; i<board_height; i++) {
+				row_shapes = [];
+				count_cols = 0;
+
+				// find all shapes in the current row
+				each(shapes, function(shape) {
+					if(shape.hasRow(i)) {
+						row_shapes.push(shape);
+					}
+				});
+
+				// loop through the found shapes
+				// and count the cols which have blocks
+				each(row_shapes, function(shape) {
+					cur_row = shape.getRow(i);
+					//console.log(row_shapes, cur_row, i);
+					each(cur_row, function(col) {
+						if(col === 1) {
+							count_cols++;
+						}
+					});
+				});
+
+				//console.log(count_cols);
+
+				// if the current row has board_width blocks
+				// in it then we know it's a full row
+				if(count_cols != board_width) { continue; }
+
+				// found a complete row!
+				// update the shapes to remove their
+				// completed row
+				each(row_shapes, function(shape) {
+					console.log(shape);
+					shape.removeRow(i);
+				});
+
+			}
+		}
+
+		function cleanup() {
+			for(var i=0; i<shapes.length; i++) {
+				if(shapes[i].isEmpty()) {
+					shapes.splice(i, 1);
+				}
+			}
 		}
 
     function render() {
@@ -121,6 +177,9 @@ function Tetris(canvasEl, fps, block_size) {
 
     engine = new Engine();
     engine.run();
+
+		this.run = engine.run;
+		this.stop = engine.stop;
 
 		this.shapes = shapes;
 		this.active_shape = active_shape;
