@@ -195,14 +195,14 @@ function Shape(ctx, block_size) {
 		}
 	}
 
-	this.getRow = function(xVal) {
-		if(!this.hasRow(xVal)) {
+	this.getRow = function(yVal) {
+		if(!this.hasRow(yVal)) {
 			return null;
 		} else {
 			var rowindex = 0;
 			loop(function(row, i, col, n) {
-				var calc_x = i + x;
-				if(calc_x === xVal) {
+				var calc_y = i + y;
+				if(calc_y === yVal) {
 					rowindex = i;
 				}
 			});
@@ -211,17 +211,17 @@ function Shape(ctx, block_size) {
 		}
 	}
 
-	this.hasRow = function(xVal) {
-		var rowStr = x;
-		var rowEnd = current_shape.length;
-		return between(xVal, rowStr, rowEnd);
+	this.hasRow = function(yVal) {
+		var rowStr = y;
+		var rowEnd = y + current_shape.length - 1;
+		return between(yVal, rowStr, rowEnd);
 	}
 
-	this.removeRow = function(xVal) {
-		if(!this.hasRow(xVal)) {
+	this.removeRow = function(yVal) {
+		if(!this.hasRow(yVal)) {
 			return null;
 		} else {
-			var rowindex = xVal - x;
+			var rowindex = yVal - y;
 			current_shape.splice(rowindex, 1);
 		}
 	}

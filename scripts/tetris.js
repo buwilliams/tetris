@@ -97,15 +97,12 @@ function Tetris(canvasEl, fps, block_size) {
 				// and count the cols which have blocks
 				each(row_shapes, function(shape) {
 					cur_row = shape.getRow(i);
-					//console.log(row_shapes, cur_row, i);
 					each(cur_row, function(col) {
 						if(col === 1) {
 							count_cols++;
 						}
 					});
 				});
-
-				//console.log(count_cols);
 
 				// if the current row has board_width blocks
 				// in it then we know it's a full row
@@ -115,7 +112,6 @@ function Tetris(canvasEl, fps, block_size) {
 				// update the shapes to remove their
 				// completed row
 				each(row_shapes, function(shape) {
-					console.log(shape);
 					shape.removeRow(i);
 				});
 
