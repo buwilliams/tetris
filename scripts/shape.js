@@ -3,7 +3,9 @@ function Shape(ctx, block_size) {
 	var x = 0,
 			y = 0,
 			move = 1,
+			current_bitmap,
 			current_shape,
+			current_pos,
 			current_color,
 			history = [];
 
@@ -14,29 +16,93 @@ function Shape(ctx, block_size) {
 	// bloodorange = #CC1100
 	// slateblue   = #007FFF
 	// orange      = #FF6600
-	
-
 
 	var colors = ['#00FFCC', '#FFD700', '#FF00FF', '#32CD32', '#CC1100', '#007FFF', '#FF6600'];
 	//var colors = ["aqua", "Gold", "Magenta", "LimeGreen", "red", "blue", "orange"];
 
 	// Shape definitions, see: http://tetris.wikia.com/wiki/Tetromino
-	var empty_bitmap = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-	var shapes_bitmap = [
+	// http://tetris.wikia.com/wiki/SRS
+	var empty_bitmap = [
 		[[1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		[[1, 1, 0, 0], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		[[0, 1, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		[[0, 1, 1, 0], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		[[1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+	];
+
+	var i_bitmap = [
+		[[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]],
+		[[0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0]],
+		[[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]]
+	];
+	
+	var j_bitmap = [
 		[[1, 0, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		[[0, 0, 1, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+		[[0, 1, 1, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 0, 0, 0]],
+		[[0, 0, 0, 0], [1, 1, 1, 0], [0, 0, 1, 0], [0, 0, 0, 0]],
+		[[0, 1, 0, 0], [0, 1, 0, 0], [1, 1, 0, 0], [0, 0, 0, 0]]
+	];
+
+	var l_bitmap = [
+		[[0, 0, 1, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 0, 0]],
+		[[0, 0, 0, 0], [1, 1, 1, 0], [1, 0, 0, 0], [0, 0, 0, 0]],
+		[[1, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 0, 0, 0]]
+	];
+
+	var o_bitmap = [
+		[[0, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[0, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[0, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[0, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+	];
+
+	var s_bitmap = [
+		[[0, 1, 1, 0], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 0], [0, 0, 0, 0]],
+		[[0, 0, 0, 0], [0, 1, 1, 0], [1, 1, 0, 0], [0, 0, 0, 0]],
+		[[1, 0, 0, 0], [1, 1, 0, 0], [0, 1, 0, 0], [0, 0, 0, 0]]
+	];
+
+	var t_bitmap = [
+		[[0, 1, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[0, 1, 0, 0], [0, 1, 1, 0], [0, 1, 0, 0], [0, 0, 0, 0]],
+		[[0, 0, 0, 0], [1, 1, 1, 0], [0, 1, 0, 0], [0, 0, 0, 0]],
+		[[0, 1, 0, 0], [1, 1, 0, 0], [0, 1, 0, 0], [0, 0, 0, 0]]
+	];
+
+	var z_bitmap = [
+		[[1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		[[0, 0, 1, 0], [0, 1, 1, 0], [0, 1, 0, 0], [0, 0, 0, 0]],
+		[[0, 0, 0, 0], [1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 0, 0]],
+		[[0, 1, 0, 0], [1, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 0]]
 	];
 
 	this.initialize = function() {
 		// Grab a new shape
-		var random_int = getRandomInt(1, 7) - 1;
-		current_shape = clone(shapes_bitmap[random_int]);
-		current_color = colors[random_int];
+		var random_int = getRandomInt(1, 7);
+
+		//console.log('random number for shape', random_int);
+
+		if(random_int == 1) {
+			current_bitmap = clone(i_bitmap);
+		} else if(random_int == 2) {
+			current_bitmap = clone(j_bitmap);
+		} else if(random_int == 3) {
+			current_bitmap = clone(l_bitmap);
+		} else if(random_int == 4) {
+			current_bitmap = clone(o_bitmap);
+		} else if(random_int == 5) {
+			current_bitmap = clone(s_bitmap);
+		} else if(random_int == 6) {
+			current_bitmap = clone(t_bitmap);
+		} else if(random_int == 7) {
+			current_bitmap = clone(z_bitmap);
+		}
+
+		current_color = colors[random_int-1];
+		current_rotation = 0;
+		current_shape = current_bitmap[current_rotation];
 	}
 
 	function clone(shape) {
@@ -137,13 +203,8 @@ function Shape(ctx, block_size) {
 	this.moveRight = function() { ++x; history.push("moveRight"); return this; }
 
 	this.rotate = function() {
-		var new_shape = clone(empty_bitmap);
-		loop(function(row, i, col, n) {
-			new_shape[n][i] = col;
-		});
-		current_shape = new_shape;
-		history.push("rotate");
-		return this;
+		current_rotation = (current_rotation == 3) ? 0 : current_rotation + 1;
+		current_shape = current_bitmap[current_rotation];
 	}
 
 	this.getAbsPos = function() {
