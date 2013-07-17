@@ -217,6 +217,15 @@ function Shape(ctx, block_size) {
 		return pos;
 	}
 
+	this.getBottom = function() {
+		var pos = this.getAbsPos(),
+				bottom = 0;
+		each(pos, function(cords, i) {
+			bottom = (cords[1]) > bottom ? cords[1] : bottom;
+		});
+		return bottom;
+	}
+
 	this.compare = function(shape) {
 		var collision = false,
 				cordsA = this.getAbsPos(),
@@ -273,18 +282,24 @@ function Shape(ctx, block_size) {
 	}
 
 	this.hasRow = function(yVal) {
-		var rowStr = y;
-		var rowEnd = y + current_shape.length - 1;
-		return between(yVal, rowStr, rowEnd);
+		var pos = this.getAbsPos(),
+				result = false;
+		each(pos, function(coord) {
+			if(coord[1] == yVal) {
+				result = true;
+			}
+		});
+		return result;
 	}
 
 	this.removeRow = function(yVal) {
 		if(!this.hasRow(yVal)) {
-			return null;
-		} else {
-			var rowindex = yVal - y;
-			current_shape.splice(rowindex, 1);
+			return;
 		}
+
+		var rowindex = yVal - y;
+		console.log('deleting row', yVal, rowindex);
+		current_shape.splice(rowindex, 1);
 	}
 
 	this.isEmpty = function() {
