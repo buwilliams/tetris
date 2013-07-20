@@ -219,9 +219,13 @@ function Shape(ctx, block_size) {
 
 	this.getBottom = function() {
 		var pos = this.getAbsPos(),
-				bottom = 0;
+				bottom = null;
 		each(pos, function(cords, i) {
-			bottom = (cords[1]) > bottom ? cords[1] : bottom;
+			if(bottom == null) {
+				bottom = cords[1];
+			} else if (bottom < cords[1]) {
+				bottom = cords[1];
+			}
 		});
 		return bottom;
 	}
@@ -267,17 +271,9 @@ function Shape(ctx, block_size) {
 
 	this.getRow = function(yVal) {
 		if(!this.hasRow(yVal)) {
-			return null;
+			return;
 		} else {
-			var rowindex = 0;
-			loop(function(row, i, col, n) {
-				var calc_y = i + y;
-				if(calc_y === yVal) {
-					rowindex = i;
-				}
-			});
-			//console.log('returning row', rowindex, x, xVal);
-			return current_shape[rowindex];
+			return current_shape[yVal - y];
 		}
 	}
 
@@ -298,12 +294,18 @@ function Shape(ctx, block_size) {
 		}
 
 		var rowindex = yVal - y;
-		console.log('deleting row', yVal, rowindex);
+		console.log('deleting row', 'yVal:', yVal, 'y:', y, 'rowindex:', rowindex);
 		current_shape.splice(rowindex, 1);
 	}
 
 	this.isEmpty = function() {
-		return (current_shape.length === 0) ? true : false;
+		if(current_shape.length === 0 ) {
+			return true;
+		}
+		if(this.getAbsPos().length === 0) {
+			return true;
+		}
+		return false;
 	}
 
 }
