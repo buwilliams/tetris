@@ -54,7 +54,7 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn) {
     function logic() {
       moveShapes();
 			fullRows();
-			cleanup();
+			//cleanup();
     }
 
     function moveShapes() {
@@ -146,13 +146,19 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn) {
 		}
 
 		function cleanup() {
+			var remove_shapes = [];
 			each(shapes, function(shape, i) {
-				//console.log('clean shape: ', shape);
 				if(shape.isEmpty()) {
-					console.log('Found shapes to remove since it is empty.');
-					shapes.splice(i, 1);
+					remove_shapes.push(i);
+					console.log('empty shape', i, shape);
+					//shapes.splice(i, 1);
 				}
 			});
+
+			each(remove_shapes, function(i) {
+				shapes.splice(i, 1);
+			});
+
 		}
 
     function render() {
@@ -177,7 +183,7 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn) {
 		{
 			if(type === 'shape') {
 				points += 10;
-			} else if(type === 'line') {
+			} else if(type === 'row') {
 				points = (10 * amount) * amount;
 				lines += amount;
 			}
