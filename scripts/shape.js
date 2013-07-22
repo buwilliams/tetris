@@ -1,7 +1,7 @@
 function Shape(ctx, block_size) {
 
 	var x = 0,
-			y = 0,
+			y = -2,
 			move = 1,
 			current_bitmap,
 			current_shape,
@@ -315,6 +315,13 @@ function Shape(ctx, block_size) {
 			return true;
 		}
 		if(this.getAbsPos().length === 0) {
+			return true;
+		}
+		return false;
+	}
+
+	this.y_at = function(yVal) {
+		if(y == yVal) {
 			return true;
 		}
 		return false;

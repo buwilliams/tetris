@@ -69,7 +69,11 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn) {
       moveCounter.inc(wait);
       if(!moveCounter.ready()) { return; }
 			active_shape.moveDown();
-			if(active_shape.checkBoundary(0, 0, board_width-1, board_height-1) || hit()) {
+			if(hit() && active_shape.y_at(-1)){
+				// game over
+				alert('game over!');
+			}
+			if(active_shape.checkBoundary(0, -2, board_width-1, board_height-1) || hit()) {
 				active_shape.undo();
 				shapes.push(active_shape);
 				active_shape = new Shape(ctx, block_size);
