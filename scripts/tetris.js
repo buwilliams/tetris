@@ -53,8 +53,16 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn) {
 
     function logic() {
       moveShapes();
-			fullRows();
-			//cleanup();
+			processAllRows();
+    }
+
+    function render() {
+      clear();
+			background();
+      each(shapes, function(s) {
+        s.draw();
+      });
+			active_shape.draw();
     }
 
     function moveShapes() {
@@ -79,96 +87,85 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn) {
 			return hit_status;
 		}
 
-		function fullRows() {
-			var row_shapes = [],
-					count_cols = 0,
-					cur_row,
-					move_down = [];
-
-			// loop through the board rows
+		function processAllRows() {
 			for(var y=board_height; y>=0; y--) {
-
-				row_shapes = [];
-				count_cols = 0;
-
-				// find all shapes in the current row
-				each(shapes, function(shape) {
-					if(shape.hasRow(y)) {
-						row_shapes.push(shape);
-					}
-				});
-
-				// loop through the found shapes
-				// and count the cols which have blocks
-				each(row_shapes, function(shape) {
-					cur_row = shape.getRow(y);
-					each(cur_row, function(col) {
-						if(col === 1) {
-							count_cols++;
-						}
-					});
-				});
-
-				// if the current row has board_width blocks
-				// in it then we know it's a full row
-				if(count_cols < board_width) { continue; }
-
-				console.log('count cols', count_cols, 'complete row', y);
-				console.log('row shapes', row_shapes);
-
-				// found a complete row!
-				// update the shapes to remove their
-				// completed row
-				each(row_shapes, function(shape) {
-					shape.removeRow(y);
-				});
-
-				move_down.push(y);
+				// if we get a full row then that row will be deleted
+				// and the appropreiate shapes moved down; for example:
+				// row 1 becomes row 0 and we need to process row 0 again
+				if(processRow(y)) { y++; }
 			}
-
-			// update the score
-			if(move_down.length > 0) {
-				addScore('row', move_down.length);
-			}
-
-			// remove shapes which doesn't exist any longer
-			cleanup();
-
-			each(move_down, function(y) {
-				// move the shapes down one row
-				each(shapes, function(shape) {
-					if(shape.getBottom() <= y) {
-						shape.moveDown();
-					}
-				});
-			});
-
 		}
 
-		function cleanup() {
-			var remove_shapes = [];
+		function processRow(y) {
+			var found_shapes;
+			if(isFullRow(y) == false) { return false; }
+			console.log('found completed row', y);
+			addScore('row', 1);
+			found_shapes = removeRow(y);
+			moveShapesDown(y, found_shapes);
+			removeEmptyShapes();
+			return true;
+		}
+
+		function isFullRow(y) {
+			var row_count = 0;
+
+			each(shapes, function(shape) {
+				row_count += shape.countRow(y);
+			});
+
+			if(row_count >= board_width) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		function removeRow(y) {
+			var found_shapes = []
 			each(shapes, function(shape, i) {
-				if(shape.isEmpty()) {
-					remove_shapes.push(i);
-					console.log('empty shape', i, shape);
-					//shapes.splice(i, 1);
+				// this function will not remove the row
+				// unless it has it, so it safe to call
+				// on shapes which do not have it
+				shape.removeRow(y);
+				found_shapes.push(i);
+			});
+			return found_shapes;
+		}
+
+		function moveShapesDown(y, found_shapes) {
+			// when removeRow is called the y position
+			// is automatically changed, therefore, we
+			// don't want to move the shapes down in that
+			// case
+			var alreadyMoved;
+			each(shapes, function(shape, i) {
+				if(shape.hasRow(y) == false) { return false; }
+
+				alreadyMoved = false;
+				each(found_shapes, function(n) {
+					if(i != n) { return false; }
+					alreadyMoved = true;
+					return true;
+				});
+				if(alreadyMoved == false) {
+					shape.moveDown();
 				}
 			});
-
-			each(remove_shapes, function(i) {
-				shapes.splice(i, 1);
-			});
-
 		}
 
-    function render() {
-      clear();
-			background();
-      each(shapes, function(s) {
-        s.draw();
-      });
-			active_shape.draw();
-    }
+		function removeEmptyShapes() {
+			var clean_shapes = [];
+			each(shapes, function(shape, i) {
+				if(!shape.isEmpty()) {
+					clean_shapes.push(shape);
+				} else {
+					console.log('cleaning shape', i, shape);
+				}
+			});
+			shapes = clean_shapes;
+		}
+
 
 		function background() {
 			ctx.fillStyle = "black";
@@ -184,7 +181,7 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn) {
 			if(type === 'shape') {
 				points += 10;
 			} else if(type === 'row') {
-				points = (10 * amount) * amount;
+				points += (10 * amount) * amount;
 				lines += amount;
 			}
 			scoreFn(points);
@@ -228,6 +225,5 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn) {
 		this.active_shape = active_shape;
 
 	}
-
 
 }

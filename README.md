@@ -8,6 +8,7 @@ Tetris
 ### Todo
 - fix bug with line completion which removes wrong pieces
 - fix rotate logic which makes the piece go off screen
+- add logic to determine if you have lost the game
 - sounds: theme music, game over, row completion, level up
 - add keys: h,j,k,l for movements and space bar for all he way down
 - add on screen controls for movements and new game

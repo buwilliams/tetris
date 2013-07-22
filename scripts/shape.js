@@ -288,6 +288,17 @@ function Shape(ctx, block_size) {
 		return result;
 	}
 
+	this.countRow = function(yVal) {
+		var pos = this.getAbsPos(),
+				result = 0;
+		each(pos, function(coord) {
+			if(coord[1] == yVal) {
+				result++;
+			}
+		});
+		return result;
+	}
+
 	this.removeRow = function(yVal) {
 		if(!this.hasRow(yVal)) {
 			return;
@@ -296,6 +307,7 @@ function Shape(ctx, block_size) {
 		var rowindex = yVal - y;
 		console.log('deleting row', 'yVal:', yVal, 'y:', y, 'rowindex:', rowindex);
 		current_shape.splice(rowindex, 1);
+		y++; // automatically move the shape down since we removed a row
 	}
 
 	this.isEmpty = function() {
