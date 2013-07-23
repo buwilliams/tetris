@@ -4,12 +4,31 @@ body {
 	font-family: "menlo"
 }
 
+ul.menu {
+	list-style: none;
+	margin-left: 0;
+	padding-left: 1em;
+	text-indent: -1em;
+}
+
+ul.menu li:before {
+	content: "\0BB \020";
+}
+
+ul.menu li {
+	margin: 5px 0 5px 10px;
+}
+
+ul.menu a {
+	color: aqua;
+}
+
 div#app {
-	width: 746px;
+	width: 796px;
 	margin: 10px auto;
 }
 
-h2 {
+h2, h3 {
 	margin: 0;
 }
 
@@ -40,5 +59,10 @@ div#center {
 }
 
 div#right {
-	width: 200px;
+	width: 250px;
+}
+
+div#info {
+	height: 500px;
+	overflow: auto;
 }

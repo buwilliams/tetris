@@ -12,6 +12,13 @@
 			<h2>Tetris</h2>
 			<audio id="music" src="music/track3.mp3" autoplay="true"></audio>		
 		</div>
+		<div class="box">
+			<h3>Game Options:</h3>
+			<ul class="menu">
+				<li><a id="reset" href="#">Start Over</a></li>
+				<li><a id="pause" href="#">Pause Game</a></li>
+			</ul>
+		</div>
 	</div>
 	<div id="center">
 		<canvas id="box" width="300" height="600"></canvas>
@@ -20,6 +27,10 @@
 		<div class="box">
 			Score: <span id="score">0</span><br/>
 			Lines: <span id="lines">0</span>
+		</div>
+		<div class="box">
+			<h3>Shape Info:</h3>
+			<div id="info"></div>
 		</div>
 	</div>
 </div>

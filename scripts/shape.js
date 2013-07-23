@@ -327,4 +327,8 @@ function Shape(ctx, block_size) {
 		return false;
 	}
 
+	this.info = function() {
+		return 'Len: '+current_shape.length+' X: '+x+' Y: '+y;
+	}
+
 }

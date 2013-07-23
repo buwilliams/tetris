@@ -1,4 +1,4 @@
-function Tetris(canvasEl, fps, block_size, scoreFn, lineFn) {
+function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 
 	var ctx = canvasEl.getContext('2d'),
 			shapes = [],
@@ -25,6 +25,7 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn) {
       gameTimer = setInterval(function() {
         processEvents();
         logic();
+				printDebug();
         render();
       }, wait);
     }
@@ -59,11 +60,20 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn) {
     function render() {
       clear();
 			background();
-      each(shapes, function(s) {
+      each(shapes, function(s, i) {
         s.draw();
       });
 			active_shape.draw();
     }
+
+		function printDebug() {
+			var html = '';
+			html += 'A('+active_shape.info() + ')<br/>';
+      each(shapes, function(s, i) {
+				html += i+'('+s.info() + ')<br/>';
+      });
+			updateInfoFn(html);
+		}
 
     function moveShapes() {
       moveCounter.inc(wait);
