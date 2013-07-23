@@ -1,3 +1,16 @@
+function $el(id) {
+	var obj = {};
+	obj.el = document.getElementById(id);
+	obj.html = function(newHtml) {
+		if(typeof(newHtml) === 'undefined') {
+			return this.el.innerHTML;
+		} else {
+			this.el.innerHTML = newHtml;
+		}
+	}
+	return obj;
+}
+
 function getRandomArbitary (min, max) {
 	return Math.random() * (max - min) + min;
 }

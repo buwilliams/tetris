@@ -21,7 +21,7 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
     var moveCounter = new WaitCounter(piece_speed);
 		var gameTimer;
 
-    this.run = function() {
+    this.start = function() {
       gameTimer = setInterval(function() {
         processEvents();
         logic();
@@ -230,9 +230,9 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 		active_shape.initialize();
 
     engine = new Engine();
-    engine.run();
+    engine.start();
 
-		this.run = engine.run;
+		this.start = engine.start;
 		this.stop = engine.stop;
 
 		this.shapes = shapes;
