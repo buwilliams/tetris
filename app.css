@@ -4,27 +4,8 @@ body {
 	font-family: "menlo"
 }
 
-ul.menu {
-	list-style: none;
-	margin-left: 0;
-	padding-left: 1em;
-	text-indent: -1em;
-}
-
-ul.menu li:before {
-	content: "\0BB \020";
-}
-
-ul.menu li {
-	margin: 5px 0 5px 10px;
-}
-
-ul.menu a {
-	color: aqua;
-}
-
 div#app {
-	width: 796px;
+	width: 846px;
 	margin: 10px auto;
 }
 
@@ -49,7 +30,7 @@ div#left, div#center, div#right {
 }
 
 div#left {
-	width: 200px;
+	width: 250px;
 	margin-right: 20px;
 }
 
@@ -63,6 +44,26 @@ div#right {
 }
 
 div#info {
-	height: 500px;
+	height: 300px;
 	overflow: auto;
 }
+
+ul.menu {
+	list-style: none;
+	margin-left: 0;
+	padding-left: 1em;
+	text-indent: -1em;
+}
+
+ul.menu li:before {
+	content: "\0BB \020";
+}
+
+ul.menu li {
+	margin: 5px 0 5px 10px;
+}
+
+ul.menu a {
+	color: aqua;
+}
+
