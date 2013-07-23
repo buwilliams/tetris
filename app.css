@@ -1,7 +1,8 @@
 body {
 	background-color: blue;
 	color: aqua;
-	font-family: "menlo"
+	font-family: "menlo";
+	/*background: #000 url('img/background.jpg') no-repeat top center;*/
 }
 
 div#app {
