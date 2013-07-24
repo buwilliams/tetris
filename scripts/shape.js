@@ -217,6 +217,20 @@ function Shape(ctx, block_size) {
 		return pos;
 	}
 
+	this.getShapeY = function(abs_y) {
+		var local_y = -1;
+		loop(function(row, i, col, n) {
+			if(col === 1) {
+				var cur_x = n+x;
+				var cur_y = i+y;
+				if(abs_y == cur_y) {
+					local_y = i;
+				}
+			}
+		});
+		return local_y;
+	}
+
 	this.getBottom = function() {
 		var pos = this.getAbsPos(),
 				bottom = null;
@@ -300,14 +314,14 @@ function Shape(ctx, block_size) {
 	}
 
 	this.removeRow = function(yVal) {
-		if(!this.hasRow(yVal)) {
-			return;
-		}
+		var row_index = this.getShapeY(yVal);
+		if(row_index === -1) { return; }
 
-		var rowindex = yVal - y;
-		console.log('deleting row', 'yVal:', yVal, 'y:', y, 'rowindex:', rowindex);
-		current_shape.splice(rowindex, 1);
-		y++; // automatically move the shape down since we removed a row
+		//console.log('deleting row', 'yVal:', yVal, 'y:', y, 'rowindex:', row_index);
+		current_shape.splice(row_index, 1);
+
+		// automatically move the shape down since we removed a row
+		y++; 
 	}
 
 	this.isEmpty = function() {

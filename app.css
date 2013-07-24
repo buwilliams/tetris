@@ -46,7 +46,7 @@ div#right {
 
 div#info {
 	height: 300px;
-	overflow: auto;
+	overflow: scroll;
 }
 
 ul.menu {

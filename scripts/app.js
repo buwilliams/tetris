@@ -31,7 +31,7 @@ function startGame() {
 		}
 	}
 
-	var tetris = new Tetris(document.getElementById('box'), 40, 30, updateScore, updateLineCount, updateInfo);
+	tetris = new Tetris(document.getElementById('box'), 40, 30, updateScore, updateLineCount, updateInfo);
 	tetris.initialize();
 
 	window.onblur = function() {

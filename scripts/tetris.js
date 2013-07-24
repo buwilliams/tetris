@@ -39,6 +39,7 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 				var e = events.shift();
 				if(e === "rotate") {
 					active_shape.rotate();
+					// TODO: fix bug where rotate moves it off screen
 				} else if(e === "left") {
 					active_shape.moveLeft();
 				} else if(e === "right") {
@@ -46,7 +47,7 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 				} else if(e === "down") {
 					active_shape.moveDown();
 				}
-				if(hit() || active_shape.checkBoundary(0, 0, board_width-1, board_height-1)) {
+				if(hit() || active_shape.checkBoundary(0, -2, board_width-1, board_height-1)) {
 					active_shape.undo();
 				}
 			}
