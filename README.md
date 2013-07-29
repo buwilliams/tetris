@@ -1,7 +1,7 @@
 Tetris
 ======
 
-###A Tetris game to learn the html5 canvas tag and basics of game development.
+### Tetris in HTML5 & Canvas
 
 ------
 
