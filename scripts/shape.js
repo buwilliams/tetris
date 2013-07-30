@@ -79,30 +79,39 @@ function Shape(ctx, block_size) {
 	];
 
 	this.initialize = function() {
-		// Grab a new shape
 		var random_int = getRandomInt(1, 7);
+		setupShape(random_int);
+	}
 
-		//console.log('random number for shape', random_int);
-
-		if(random_int == 1) {
-			current_bitmap = clone(i_bitmap);
-		} else if(random_int == 2) {
-			current_bitmap = clone(j_bitmap);
-		} else if(random_int == 3) {
-			current_bitmap = clone(l_bitmap);
-		} else if(random_int == 4) {
-			current_bitmap = clone(o_bitmap);
-		} else if(random_int == 5) {
-			current_bitmap = clone(s_bitmap);
-		} else if(random_int == 6) {
-			current_bitmap = clone(t_bitmap);
-		} else if(random_int == 7) {
-			current_bitmap = clone(z_bitmap);
-		}
-
-		current_color = colors[random_int-1];
+	function setupShape(bitmap) {
+		current_bitmap = getBitmap(bitmap);
+		current_color = getColor(bitmap);
 		current_rotation = 0;
 		current_shape = current_bitmap[current_rotation];
+	}
+
+	function getColor(bitmap) {
+		return colors[bitmap-1];
+	}
+
+	function getBitmap(bitmap) {
+		var outBitmap;
+		if(bitmap == 1) {
+			outBitmap = clone(i_bitmap);
+		} else if(bitmap == 2) {
+			outBitmap = clone(j_bitmap);
+		} else if(bitmap == 3) {
+			outBitmap = clone(l_bitmap);
+		} else if(bitmap == 4) {
+			outBitmap = clone(o_bitmap);
+		} else if(bitmap == 5) {
+			outBitmap = clone(s_bitmap);
+		} else if(bitmap == 6) {
+			outBitmap = clone(t_bitmap);
+		} else if(bitmap == 7) {
+			outBitmap = clone(z_bitmap);
+		}
+		return outBitmap;
 	}
 
 	function clone(shape) {
@@ -343,6 +352,17 @@ function Shape(ctx, block_size) {
 
 	this.info = function() {
 		return 'Len: '+current_shape.length+' X: '+x+' Y: '+y;
+	}
+
+	this.hit = function() {
+		current_color = '#ff69b4'; // pink
+	}
+
+	this.override = function(bitmap, rotation, new_x, new_y) {
+		setupShape(bitmap);
+		current_shape = current_bitmap[rotation];
+		x = new_x;
+		y = new_y;
 	}
 
 }

@@ -117,6 +117,11 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 			console.log('found completed row', y);
 			addScore('row', 1);
 			found_shapes = removeRow(y);
+
+			each(found_shapes, function(i) {
+				shapes[i].hit();
+			});
+
 			moveShapesDown(y, found_shapes);
 			removeEmptyShapes();
 			return true;
@@ -142,7 +147,7 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 				// this function will not remove the row
 				// unless it has it, so it safe to call
 				// on shapes which do not have it
-				shape.removeRow(y);
+				//shape.removeRow(y);
 				found_shapes.push(i);
 			});
 			return found_shapes;
@@ -219,6 +224,15 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 		} else if(k === RIGHT) {
 			events.push("right");
 		}
+	}
+
+	this.addShape = function(bitmap, rotation, x, y) {
+		var userShape = new Shape(ctx, block_size);
+		userShape.initialize();
+		userShape.override(bitmap, rotation, x, y);
+		userShape.draw();
+		shapes.push(userShape);
+		return userShape;
 	}
 
 	this.initialize = function() {
