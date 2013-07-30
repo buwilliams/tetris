@@ -1,19 +1,21 @@
-function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
+function Tetris(canvasEl, fps, block_size, processAction) {
 
 	var ctx = canvasEl.getContext('2d'),
 			shapes = [],
 			events = [],
 			active_shape,
 			engine,
-			points = 0,
-			lines = 0;
+			score = 0,
+			lines = 0,
+			level = 1,
 			board_width = Math.floor(canvasEl.width / block_size),
 			board_height = Math.floor(canvasEl.height / block_size),
 			piece_speed = 1000,
 			UP = 38,
 			DOWN = 40,
 			LEFT = 37,
-			RIGHT = 39;
+			RIGHT = 39,
+			LEVEL_UP = 10;
 
 	function Engine() {
 
@@ -76,16 +78,18 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 			each(shapes, function(s, i) {
 				html += i+'('+s.info() + ')<br/>';
 			});
-			updateInfoFn(html);
+			processAction(3, html);
 		}
 
 		function moveShapes() {
+			moveCounter.setWait(piece_speed);
 			moveCounter.inc(wait);
 			if(!moveCounter.ready()) { return; }
 			active_shape.moveDown();
 			if(hit() && active_shape.y_at(-1)){
 				// game over
-				console.log('game over!');
+				//console.log('game over!');
+				processAction(5);
 			}
 			if(active_shape.checkBoundary(0, -2, board_width-1, board_height-1) || hit()) {
 				active_shape.undo();
@@ -194,13 +198,21 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 		function addScore(type, amount)
 		{
 			if(type === 'shape') {
-				points += 10;
+				score += 10;
+				processAction(1, score);
 			} else if(type === 'row') {
-				points += (10 * amount) * amount;
+				score += (10 * amount) * amount;
 				lines += amount;
+				processAction(2, lines);
 			}
-			scoreFn(points);
-			lineFn(lines);
+
+			var new_level = Math.floor(lines / LEVEL_UP) + 1;
+			console.log('new level', new_level);
+			if(new_level > level) {
+				level = new_level;
+				processAction(4, level);
+				piece_speed = 1000 - (level * 60);
+			}
 		}
 
 		return {
@@ -252,6 +264,8 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 		active_shape = new Shape(ctx, block_size);
 		active_shape.initialize();
 
+		this.test1();
+
     engine = new Engine();
 		this.engine = engine;
     engine.start();
@@ -282,6 +296,18 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 		this.addShape(4, 0,  3, 14);
 		this.addShape(4, 0,  5, 14);
 		this.addShape(4, 0,  7, 14);
+
+		this.addShape(4, 0, -1, 12);
+		this.addShape(4, 0,  1, 12);
+		this.addShape(4, 0,  3, 12);
+		this.addShape(4, 0,  5, 12);
+		this.addShape(4, 0,  7, 12);
+
+		this.addShape(4, 0, -1, 10);
+		this.addShape(4, 0,  1, 10);
+		this.addShape(4, 0,  3, 10);
+		this.addShape(4, 0,  5, 10);
+		this.addShape(4, 0,  7, 10);
 	}
 
 }

@@ -6,15 +6,14 @@ Tetris
 ------
 
 ### Todo
-- store sound setting in a cookie so that you don't have to press it each time
-- fix bug with line completion which removes wrong pieces
-- fix rotate logic which makes the piece go off screen
 - add logic to determine if you have lost the game
+- draw game over on board
 - sounds: theme music, game over, row completion, level up
 - add keys: h,j,k,l for movements and space bar for all he way down
 - add on screen controls for movements and new game
 - add screen controls indicating current level
 - add levels which increase speed
+- store sound setting in a cookie so that you don't have to press it each time
 
 ### Completed
 - basic code struture
@@ -37,3 +36,5 @@ Tetris
 - line completion logic
 - ability to remove blocks on line completion
 - add scoring and page callbacks
+- fix bug with line completion which removes wrong pieces
+- fix rotate logic which makes the piece go off screen

@@ -4,20 +4,29 @@
 	<title>Tetris</title>
 	<link href="app.css" rel="stylesheet" /> 
 </head>
-<body onload="startGame();">
+<body onload="init_tetris();">
 
 <div id="app">
 	<div id="left">
 		<div class="box">
 			<h2>Tetris</h2>
-			<audio id="music" src="music/track3.mp3" autoplay="true"></audio>		
+			<audio id="music" src="" autoplay="false"></audio>		
+			<audio id="sounds" src="" autoplay="false"></audio>		
 		</div>
 		<div class="box">
 			<h3>Game Options:</h3>
 			<ul class="menu">
-				<li><a id="reset" href="#">Start Over</a></li>
+				<li><a id="reset" href="#">Restart</a></li>
 				<li><a id="mute" href="#">Mute Sound</a></li>
 				<li><a id="pause" href="#">Pause Game</a></li>
+			</ul>
+		</div>
+		<div class="box">
+			<h3>Sounds:</h3>
+			<ul class="menu">
+				<li><a id="yeah" href="#">Yeah</a></li>
+				<li><a id="nextlevel" href="#">Next Level</a></li>
+				<li><a id="gameover" href="#">Game Over</a></li>
 			</ul>
 		</div>
 	</div>
@@ -26,6 +35,7 @@
 	</div>
 	<div id="right">
 		<div class="box">
+			Level: <span id="level">1</span><br/>
 			Score: <span id="score">0</span><br/>
 			Lines: <span id="lines">0</span>
 		</div>

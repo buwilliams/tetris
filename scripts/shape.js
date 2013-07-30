@@ -213,8 +213,16 @@ function Shape(ctx, block_size) {
 	this.moveRight = function() { ++x; history.push("moveRight"); return this; }
 
 	this.rotate = function() {
+		history.push("rotate");
 		current_rotation = (current_rotation == 3) ? 0 : current_rotation + 1;
 		current_shape = current_bitmap[current_rotation];
+		return this;
+	}
+
+	this.unrotate = function() {
+		this.rotate();
+		this.rotate();
+		this.rotate();
 	}
 
 	this.getAbsPos = function() {
@@ -274,6 +282,7 @@ function Shape(ctx, block_size) {
 		each(pos, function(cords, i) {
 			if(cords[0] < minX || cords[0] > maxX || cords[1] < minY || cords[1] > maxY) {
 				outOfBounds = true;
+				return true;
 			}
 		});
 		return outOfBounds;
@@ -290,6 +299,8 @@ function Shape(ctx, block_size) {
 			this.moveRight();
 		} else if(action === "moveRight") {
 			this.moveLeft();
+		} else if(action === "rotate") {
+			this.unrotate();
 		}
 	}
 

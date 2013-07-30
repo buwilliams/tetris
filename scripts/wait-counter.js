@@ -10,6 +10,10 @@ function WaitCounter(waitTime) {
 		counter += mili;
 	}
 
+	this.setWait = function(new_wait) {
+		waitTime = new_wait;
+	}
+
 	this.ready = function() {
 		if(counter >= waitTime) {
 			return true;
