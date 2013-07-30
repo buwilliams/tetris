@@ -1,13 +1,14 @@
 function Shape(ctx, block_size) {
 
-	var x = 0,
-			y = -2,
+	var x = 3, // three blocks from the right
+			y = -2, // two blocks above visible
 			move = 1,
 			current_bitmap,
 			current_shape,
 			current_pos,
 			current_color,
-			history = [];
+			history = [],
+			MAX_HISTORY = 10;
 
 	// aqua        = #00FFCC
 	// gold        = #FFD700
@@ -122,7 +123,7 @@ function Shape(ctx, block_size) {
 		return shape_clone;
 	}
 
-	function drawBlock(x, y, color) {
+	function renderBlock(x, y, color) {
 		var xPos = x*block_size, 
 		    yPos = y*block_size,
 				m = block_size;
@@ -186,23 +187,23 @@ function Shape(ctx, block_size) {
 	}
 	
 	function loop(fn) {
-		each(current_shape, function(row, i) {
-			each(row, function(col, n) {
-				fn(row, i, col, n);
+		each(current_shape, function(row, shape_y) {
+			each(row, function(col, shape_x) {
+				fn(row, shape_y, col, shape_x);
 			});
 		});
 	}
 
-	this.draw = function() {
+	this.render = function() {
 		// keep the history to a managable size
-		if(history.length > 10) {
+		if(history.length > MAX_HISTORY) {
 			history.shift();
 		}
-		each(current_shape, function(row, i) {
-			each(row, function(col, n) {
-				if(col === 1) { drawBlock(x+n, y+i); }
-			});
+
+		loop(function(row, shape_y, col, shape_x) {
+			if(col === 1) { renderBlock(x+shape_x, y+shape_y); }
 		});
+
 		return this;
 	}
 
@@ -306,6 +307,7 @@ function Shape(ctx, block_size) {
 		each(pos, function(coord) {
 			if(coord[1] == yVal) {
 				result = true;
+				return true; // quick way to exit the for loop
 			}
 		});
 		return result;
@@ -324,13 +326,11 @@ function Shape(ctx, block_size) {
 
 	this.removeRow = function(yVal) {
 		var row_index = this.getShapeY(yVal);
-		if(row_index === -1) { return; }
-
-		//console.log('deleting row', 'yVal:', yVal, 'y:', y, 'rowindex:', row_index);
+		if(row_index === -1) { return false; }
+		console.log('row index', row_index);
 		current_shape.splice(row_index, 1);
-
-		// automatically move the shape down since we removed a row
-		y++; 
+		y += 1; 
+		return true;
 	}
 
 	this.isEmpty = function() {
@@ -363,6 +363,10 @@ function Shape(ctx, block_size) {
 		current_shape = current_bitmap[rotation];
 		x = new_x;
 		y = new_y;
+	}
+
+	this.getShape = function() {
+		return current_shape;
 	}
 
 }

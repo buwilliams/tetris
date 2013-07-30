@@ -15,31 +15,34 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 			LEFT = 37,
 			RIGHT = 39;
 
-  function Engine() {
+	function Engine() {
 
-    var wait = convertFPStoMili(fps);
-    var moveCounter = new WaitCounter(piece_speed);
+		var wait = convertFPStoMili(fps);
+		var moveCounter = new WaitCounter(piece_speed);
 		var gameTimer;
 
-    this.start = function() {
-      gameTimer = setInterval(function() {
-        processEvents();
-        logic();
-				printDebug();
-        render();
-      }, wait);
-    }
+		function start() {
+			gameTimer = setInterval(function() {
+				gameLoop();
+			}, wait);
+		}
 
-		this.stop = function() {
+		function stop() {
 			clearInterval(gameTimer);
 		}
 
-    function processEvents() {
+		function gameLoop() {
+			processEvents();
+			logic();
+			printDebug();
+			render();
+		}
+
+		function processEvents() {
 			while(events.length !== 0) {
 				var e = events.shift();
 				if(e === "rotate") {
 					active_shape.rotate();
-					// TODO: fix bug where rotate moves it off screen
 				} else if(e === "left") {
 					active_shape.moveLeft();
 				} else if(e === "right") {
@@ -51,38 +54,38 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 					active_shape.undo();
 				}
 			}
-    }
+		}
 
-    function logic() {
-      moveShapes();
+		function logic() {
+			moveShapes();
 			processAllRows();
-    }
+		}
 
-    function render() {
-      clear();
+		function render() {
+			clear();
 			background();
-      each(shapes, function(s, i) {
-        s.draw();
-      });
-			active_shape.draw();
-    }
+			each(shapes, function(s, i) {
+				s.render();
+			});
+			active_shape.render();
+		}
 
 		function printDebug() {
 			var html = '';
 			html += 'A('+active_shape.info() + ')<br/>';
-      each(shapes, function(s, i) {
+			each(shapes, function(s, i) {
 				html += i+'('+s.info() + ')<br/>';
-      });
+			});
 			updateInfoFn(html);
 		}
 
-    function moveShapes() {
-      moveCounter.inc(wait);
-      if(!moveCounter.ready()) { return; }
+		function moveShapes() {
+			moveCounter.inc(wait);
+			if(!moveCounter.ready()) { return; }
 			active_shape.moveDown();
 			if(hit() && active_shape.y_at(-1)){
 				// game over
-				alert('game over!');
+				console.log('game over!');
 			}
 			if(active_shape.checkBoundary(0, -2, board_width-1, board_height-1) || hit()) {
 				active_shape.undo();
@@ -92,7 +95,7 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 				addScore('shape');
 			}
 			moveCounter.reset();
-    }
+		}
 
 		function hit() {
 			var hit_status = false;
@@ -103,7 +106,8 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 		}
 
 		function processAllRows() {
-			for(var y=board_height; y>=0; y--) {
+			var board_bottom = board_height - 1;
+			for(var y=board_bottom; y>=0; y--) {
 				// if we get a full row then that row will be deleted
 				// and the appropreiate shapes moved down; for example:
 				// row 1 becomes row 0 and we need to process row 0 again
@@ -114,14 +118,9 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 		function processRow(y) {
 			var found_shapes;
 			if(isFullRow(y) == false) { return false; }
-			console.log('found completed row', y);
+			console.log('complete row', y);
 			addScore('row', 1);
 			found_shapes = removeRow(y);
-
-			each(found_shapes, function(i) {
-				shapes[i].hit();
-			});
-
 			moveShapesDown(y, found_shapes);
 			removeEmptyShapes();
 			return true;
@@ -147,8 +146,9 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 				// this function will not remove the row
 				// unless it has it, so it safe to call
 				// on shapes which do not have it
-				//shape.removeRow(y);
-				found_shapes.push(i);
+				if(shape.removeRow(y)) {
+					found_shapes.push(i);
+				}
 			});
 			return found_shapes;
 		}
@@ -158,15 +158,26 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 			// is automatically changed, therefore, we
 			// don't want to move the shapes down in that
 			// case
+			
+			//console.log('not each', found_shapes);
+			notEach(shapes, found_shapes, function(shape, i) {
+				// need to determine if the shape has a Y value which
+				// is less than Y, if so we can move it down
+				if(shape.getBottom() < y) {
+					shape.moveDown();
+				}
+			});
+
 			var alreadyMoved;
 			each(shapes, function(shape, i) {
-				if(shape.hasRow(y) == false) { return false; }
+				if(shape.hasRow(y) === false) { return false; }
 
 				alreadyMoved = false;
 				each(found_shapes, function(n) {
-					if(i != n) { return false; }
-					alreadyMoved = true;
-					return true;
+					if(i === n) {
+						alreadyMoved = true;
+						return false;
+					}
 				});
 				if(alreadyMoved == false) {
 					shape.moveDown();
@@ -175,26 +186,28 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 		}
 
 		function removeEmptyShapes() {
-			var clean_shapes = [];
+			var clean_shapes = [], empty_shapes = [];
 			each(shapes, function(shape, i) {
-				if(!shape.isEmpty()) {
+				if(shape.isEmpty() === false) {
 					clean_shapes.push(shape);
 				} else {
-					console.log('cleaning shape', i, shape);
+					empty_shapes.push(shape);
 				}
 			});
+			if(empty_shapes.length > 0) {
+				console.log('empty shape', empty_shapes);
+			}
 			shapes = clean_shapes;
 		}
-
 
 		function background() {
 			ctx.fillStyle = "black";
 			ctx.fillRect(0, 0, board_width*block_size, board_height*block_size);
 		}
 
-    function clear() {
-      ctx.clearRect(0, 0, board_width*block_size, board_height*block_size);
-    }
+		function clear() {
+			ctx.clearRect(0, 0, board_width*block_size, board_height*block_size);
+		}
 
 		function addScore(type, amount)
 		{
@@ -208,7 +221,20 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 			lineFn(lines);
 		}
 
-  }
+		return {
+			stop: stop,
+			start: start,
+			render: render,
+			gameLoop: gameLoop,
+			removeRow: removeRow,
+			printDebug: printDebug,
+			clear: clear,
+			processRow: processRow,
+			isFullRow: isFullRow,
+			moveShapesDown: moveShapesDown
+		};
+
+	}
 
 	function keypress(e) {
 
@@ -230,7 +256,7 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 		var userShape = new Shape(ctx, block_size);
 		userShape.initialize();
 		userShape.override(bitmap, rotation, x, y);
-		userShape.draw();
+		userShape.render();
 		shapes.push(userShape);
 		return userShape;
 	}
@@ -245,6 +271,7 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 		active_shape.initialize();
 
     engine = new Engine();
+		this.engine = engine;
     engine.start();
 
 		this.start = engine.start;
@@ -253,6 +280,26 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 		this.shapes = shapes;
 		this.active_shape = active_shape;
 
+	}
+
+	this.test1 = function() {
+		this.addShape(4, 0, -1, 18);
+		this.addShape(4, 0,  1, 18);
+		this.addShape(4, 0,  3, 18);
+		this.addShape(4, 0,  5, 18);
+		this.addShape(4, 0,  7, 18);
+
+		this.addShape(4, 0, -1, 16);
+		this.addShape(4, 0,  1, 16);
+		this.addShape(4, 0,  3, 16);
+		this.addShape(4, 0,  5, 16);
+		this.addShape(4, 0,  7, 16);
+
+		this.addShape(4, 0, -1, 14);
+		this.addShape(4, 0,  1, 14);
+		this.addShape(4, 0,  3, 14);
+		this.addShape(4, 0,  5, 14);
+		this.addShape(4, 0,  7, 14);
 	}
 
 }

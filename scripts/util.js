@@ -20,10 +20,24 @@ function getRandomInt(min, max) {
 }
 
 function each(ary, fn) {
-	var i, len = ary.length;
+	var i, len = ary.length, result;
 	for(i=0; i<len; i++) {
-		fn(ary[i], i);
+		result = fn(ary[i], i);
+		if(result === true) { break; }
 	}
+}
+
+function notEach(ary, exceptionsIndex, fn) {
+	each(ary, function(item, i) {
+		var found = false, result;
+		each(exceptionsIndex, function(exItem) {
+			if(i === exItem) { found = true; }
+			return true; // drop out of each more quickly
+		});
+		if(!found) {
+			return fn(item, i);
+		}
+	});
 }
 
 function convertFPStoMili(fps) {
