@@ -158,28 +158,10 @@ function Tetris(canvasEl, fps, block_size, scoreFn, lineFn, updateInfoFn) {
 			// is automatically changed, therefore, we
 			// don't want to move the shapes down in that
 			// case
-			
-			//console.log('not each', found_shapes);
 			notEach(shapes, found_shapes, function(shape, i) {
 				// need to determine if the shape has a Y value which
 				// is less than Y, if so we can move it down
 				if(shape.getBottom() < y) {
-					shape.moveDown();
-				}
-			});
-
-			var alreadyMoved;
-			each(shapes, function(shape, i) {
-				if(shape.hasRow(y) === false) { return false; }
-
-				alreadyMoved = false;
-				each(found_shapes, function(n) {
-					if(i === n) {
-						alreadyMoved = true;
-						return false;
-					}
-				});
-				if(alreadyMoved == false) {
 					shape.moveDown();
 				}
 			});
