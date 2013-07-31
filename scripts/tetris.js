@@ -10,7 +10,9 @@ function Tetris(canvasEl, fps, block_size, processAction) {
 			level = 1,
 			board_width = Math.floor(canvasEl.width / block_size),
 			board_height = Math.floor(canvasEl.height / block_size),
-			piece_speed = 1000,
+			START_SPEED = 1000,
+			SPEED_ADJUSTMENT = 90,
+			speed = START_SPEED,
 			UP = 38,
 			DOWN = 40,
 			LEFT = 37,
@@ -20,7 +22,7 @@ function Tetris(canvasEl, fps, block_size, processAction) {
 	function Engine() {
 
 		var wait = convertFPStoMili(fps);
-		var moveCounter = new WaitCounter(piece_speed);
+		var moveCounter = new WaitCounter(speed);
 		var gameTimer;
 
 		function start() {
@@ -82,7 +84,7 @@ function Tetris(canvasEl, fps, block_size, processAction) {
 		}
 
 		function moveShapes() {
-			moveCounter.setWait(piece_speed);
+			moveCounter.setWait(speed);
 			moveCounter.inc(wait);
 			if(!moveCounter.ready()) { return; }
 			active_shape.moveDown();
@@ -96,7 +98,7 @@ function Tetris(canvasEl, fps, block_size, processAction) {
 				shapes.push(active_shape);
 				active_shape = new Shape(ctx, block_size);
 				active_shape.initialize();
-				addScore('shape');
+				updateGame('shape');
 			}
 			moveCounter.reset();
 		}
@@ -122,8 +124,8 @@ function Tetris(canvasEl, fps, block_size, processAction) {
 		function processRow(y) {
 			var found_shapes;
 			if(isFullRow(y) == false) { return false; }
-			console.log('complete row', y);
-			addScore('row', 1);
+			//console.log('complete row', y);
+			updateGame('row', 1);
 			found_shapes = removeRow(y);
 			moveShapesDown(y, found_shapes);
 			removeEmptyShapes();
@@ -181,7 +183,7 @@ function Tetris(canvasEl, fps, block_size, processAction) {
 				}
 			});
 			if(empty_shapes.length > 0) {
-				console.log('empty shape', empty_shapes);
+				//console.log('empty shape', empty_shapes);
 			}
 			shapes = clean_shapes;
 		}
@@ -195,24 +197,43 @@ function Tetris(canvasEl, fps, block_size, processAction) {
 			ctx.clearRect(0, 0, board_width*block_size, board_height*block_size);
 		}
 
-		function addScore(type, amount)
+		function updateGame(type, amount)
 		{
+			var isNewLevel = false, new_level = Math.floor(lines / LEVEL_UP) + 1;
+			//console.log('new level', new_level);
+			if(new_level > level) {
+				isNewLevel = true;
+				setLevel(new_level);
+			}
+
 			if(type === 'shape') {
 				score += 10;
 				processAction(1, score);
 			} else if(type === 'row') {
 				score += (10 * amount) * amount;
 				lines += amount;
-				processAction(2, lines);
+				if(!isNewLevel) {
+					processAction(2, lines);
+				}
 			}
 
-			var new_level = Math.floor(lines / LEVEL_UP) + 1;
-			console.log('new level', new_level);
-			if(new_level > level) {
-				level = new_level;
-				processAction(4, level);
-				piece_speed = 1000 - (level * 60);
-			}
+		}
+
+		function setLevel(new_level) {
+			level = new_level;
+			updateSpeed();
+			processAction(4, level);
+		}
+
+		function updateSpeed() {
+			// as the levels increase the drop speed
+			// of the blocks will increase because the
+			// wait time will be shorter between movements
+			// the start movement speed is 1 second. each
+			// time you reach a new level the wait time
+			// will decrease by 60 miliseconds, by level
+			// 10 the wait time will be 400 miliseconds.
+			speed = START_SPEED - (level * SPEED_ADJUSTMENT);
 		}
 
 		return {
@@ -225,7 +246,8 @@ function Tetris(canvasEl, fps, block_size, processAction) {
 			clear: clear,
 			processRow: processRow,
 			isFullRow: isFullRow,
-			moveShapesDown: moveShapesDown
+			moveShapesDown: moveShapesDown,
+			setLevel: setLevel
 		};
 
 	}
@@ -264,7 +286,7 @@ function Tetris(canvasEl, fps, block_size, processAction) {
 		active_shape = new Shape(ctx, block_size);
 		active_shape.initialize();
 
-		this.test1();
+		//this.test1();
 
     engine = new Engine();
 		this.engine = engine;

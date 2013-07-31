@@ -338,7 +338,7 @@ function Shape(ctx, block_size) {
 	this.removeRow = function(yVal) {
 		var row_index = this.getShapeY(yVal);
 		if(row_index === -1) { return false; }
-		console.log('row index', row_index);
+		//console.log('row index', row_index);
 		current_shape.splice(row_index, 1);
 		y += 1; 
 		return true;

@@ -1,6 +1,6 @@
 function init_tetris() {
 	
-	var soundOn = true;
+	var soundOn = true, sound_queue_running = false, sound_queue = [];
 
 	function playMusic(sound) {
 		var source;
@@ -32,6 +32,9 @@ function init_tetris() {
 			return;
 		}
 
+		sound_queue.push(source);
+		//soundQueue();
+
 		var el = $el('music').el;
 		el.src = source;
 
@@ -39,6 +42,30 @@ function init_tetris() {
 		// we'll be on the right track
 		if(soundOn === false) { return; }
 		el.play();
+	}
+
+	function soundQueue() {
+		// what to do here?
+		// i need a loop which doesn't
+		// block the process!
+		var soundTimer = setInterval(processSoundQueue, 100);
+	}
+
+	function procesSoundQueue() {
+		// reach the end of the qeueue
+		if(sound_queue.length === 0) {
+			return false;
+		}
+		
+		var item = sound_queue.shift();
+		var el = $el('music').el;
+		el.src = item;
+
+		// moved it here so that when they resume the music
+		// we'll be on the right track
+		if(soundOn === false) { return true; }
+		el.play();
+		return true;
 	}
 
 	function stopMusic() {
@@ -182,6 +209,11 @@ function init_tetris() {
 	$el('gameover').el.onclick = function(e) {
 		playSound(3);
 	}
+
+	$el('music').el.addEventListener('ended', function() {
+		console.log('music ended!');
+		this.currentTime = 0;
+	}, false);
 
 	processAction(0); // starts the game
 
