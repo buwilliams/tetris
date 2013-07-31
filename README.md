@@ -6,14 +6,13 @@ Tetris
 ------
 
 ### Todo
-- add logic to determine if you have lost the game
+- draw the next piece
+- draw the ghost piece where it would end up
 - draw game over on board
-- sounds: theme music, game over, row completion, level up
-- add keys: h,j,k,l for movements and space bar for all he way down
-- add on screen controls for movements and new game
-- add screen controls indicating current level
-- add levels which increase speed
-- store sound setting in a cookie so that you don't have to press it each time
+- spacebar key event for dropping the piece all the way to the bottom
+- movement key events fo h,j,k,l 
+- add on screen controls for movements with just a mouse
+- store sound setting in a cookie so that you don't have to press pause each time
 
 ### Completed
 - basic code struture
@@ -38,3 +37,7 @@ Tetris
 - add scoring and page callbacks
 - fix bug with line completion which removes wrong pieces
 - fix rotate logic which makes the piece go off screen
+- add logic to determine if you have lost the game
+- sounds: theme music, game over, row completion, level up
+- add screen controls indicating current level
+- add levels which increase speed
