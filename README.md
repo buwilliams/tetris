@@ -6,10 +6,11 @@ Tetris
 ------
 
 ### Todo
+- fix scoring bug, you don't get the multiplier for multiple rows
+- fix sound bug, if multiple sounds trigger, you only here one
 - draw the next piece
-- draw the ghost piece where it would end up
 - draw game over on board
-- spacebar key event for dropping the piece all the way to the bottom
+- return key event for dropping the piece all the way to the bottom
 - movement key events fo h,j,k,l 
 - add on screen controls for movements with just a mouse
 - store sound setting in a cookie so that you don't have to press pause each time
