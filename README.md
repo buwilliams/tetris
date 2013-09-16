@@ -1,7 +1,6 @@
-Tetris
-======
-
-### Tetris in HTML5 & Canvas
+A full tetris implementation in HTML5 with Canvas. The game features
+custom sounds effects (mostly created to make my son laugh) and the
+standard tetris game you have come to love.
 
 ------
 
