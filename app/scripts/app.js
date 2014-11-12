@@ -1,4 +1,6 @@
 function init_tetris() {
+
+    var isDebug = location.search === '?debug=true' ? true : false;
 	
 	var soundOn = true, sound_queue_running = false, sound_queue = [];
 
@@ -183,6 +185,13 @@ function init_tetris() {
 		}
 	}
 
+    function setDebug() {
+        if(isDebug) {
+            $el('shapeInfo').show();
+            $el('soundCtrl').show();
+        }
+    }
+
 	$el('reset').el.onclick = function(e) {
 		e.preventDefault();
 		resetGame();
@@ -215,6 +224,7 @@ function init_tetris() {
 		this.currentTime = 0;
 	}, false);
 
+    setDebug();
 	processAction(0); // starts the game
 
 }

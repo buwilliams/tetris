@@ -2,14 +2,14 @@
 <html>
 <head>
 <title>Tetris</title>
-<link href="app.css" rel="stylesheet" /> 
+<link href="css/app.css" rel="stylesheet" /> 
 </head>
 <body onload="init_tetris();">
 
 <div id="app">
     <div id="left">
         <div class="box">
-            <h2>Tetris</h2>
+            <h2 style="text-align: center;">Tetris</h2>
             <audio id="music" src="" autoplay="false"></audio>		
             <audio id="sounds" src="" autoplay="false"></audio>		
         </div>
@@ -21,7 +21,7 @@
                 <li><a id="pause" href="#">Pause Game</a></li>
             </ul>
         </div>
-        <div class="box">
+        <div id="soundCtrl" class="box" style="display:none;">
             <h3>Sounds:</h3>
             <ul class="menu">
                 <li><a id="yeah" href="#">Yeah</a></li>
@@ -35,11 +35,11 @@
     </div>
     <div id="right">
         <div class="box">
-            Level: <span id="level">1</span><br/>
-            Score: <span id="score">0</span><br/>
-            Lines: <span id="lines">0</span>
+            <h3>Score: <span id="score">0</span></h3>
+            <h3>Level: <span id="level">1</span></h3>
+            <h3>Lines: <span id="lines">0</span></h3>
         </div>
-        <div class="box">
+        <div id="shapeInfo" class="box" style="display:none;">
             <h3>Shape Info:</h3>
             <div id="info"></div>
         </div>

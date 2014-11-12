@@ -7,7 +7,13 @@ function $el(id) {
 		} else {
 			this.el.innerHTML = newHtml;
 		}
-	}
+	};
+    obj.hide = function() {
+        this.el.style.display = 'none';
+    };
+    obj.show = function() {
+        this.el.style.display = '';
+    };
 	return obj;
 }
 

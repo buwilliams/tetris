@@ -1,13 +1,14 @@
 body {
-	background-color: blue;
-	color: aqua;
-	font-family: "menlo";
-	/*background: #000 url('img/background.jpg') no-repeat top center;*/
+	background-color: #222;;
+	color: #6FC3DF;
+	font-family: "menlo", Arial;
+    font-size: 14pt;
 }
 
 div#app {
 	width: 846px;
 	margin: 10px auto;
+    color: #DF740C
 }
 
 h2, h3 {
@@ -17,12 +18,12 @@ h2, h3 {
 div.box {
 	margin-bottom: 20px;
 	background-color: #000;
-	border: solid 3px aqua;
+	border: solid 3px #6FC3DF;
 	padding: 5px;
 }
 
 canvas#box {
-	border: solid 3px aqua;
+	border: solid 3px #6FC3DF;
 	background-color: #000;
 }
 
@@ -65,6 +66,6 @@ ul.menu li {
 }
 
 ul.menu a {
-	color: aqua;
+	color: #FFE64D;
 }
 
